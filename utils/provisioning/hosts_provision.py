@@ -1,5 +1,134 @@
+import ast
+import json
 import os
 import sys
+from typing import List
+from collections import namedtuple
+from json import JSONEncoder
+
+
+class Microservice:
+    def __init__(
+        self,
+        microserviceID: str,
+        microservice_name: str,
+        microservice_namespace: str,
+        virtualization: str,
+        cmd: List[str],
+        memory: int,
+        vcpus: int,
+        vgpus: int,
+        vtpus: int,
+        bandwidth_in: int,
+        bandwidth_out: int,
+        storage: int,
+        code: str,
+        state: str,
+        port: str,
+        added_files: List[str],
+    ):
+        self.microserviceID = microserviceID
+        self.microservice_name = microservice_name
+        self.microservice_namespace = microservice_namespace
+        self.virtualization = virtualization
+        self.cmd = cmd
+        self.memory = memory
+        self.vcpus = vcpus
+        self.vgpus = vgpus
+        self.vtpus = vtpus
+        self.bandwidth_in = bandwidth_in
+        self.bandwidth_out = bandwidth_out
+        self.storage = storage
+        self.code = code
+        self.state = state
+        self.port = port
+        self.added_files = added_files
+
+
+class Application:
+    def __init__(
+        self,
+        applicationID: str,
+        application_name: str,
+        application_namespace: str,
+        application_desc: str,
+        microservices: List[Microservice],
+    ):
+        self.applicationID = applicationID
+        self.application_name = application_name
+        self.application_namespace = application_namespace
+        self.application_desc = application_desc
+        self.microservices = microservices
+
+
+class SLADescriptor:
+    def __init__(
+        self, sla_version: str, customerID: str, applications: List[Application]
+    ):
+        self.sla_version = sla_version
+        self.customerID = customerID
+        self.applications = applications
+
+
+class Cluster:
+    def __init__(
+        self, cluster_number: int, workers_number: int, sla_descriptor: SLADescriptor
+    ):
+        self.cluster_number = cluster_number
+        self.workers_number = workers_number
+        self.sla_descriptor = sla_descriptor
+
+
+class TopologyDescriptor:
+    def __init__(self, onedoc: bool, mdoc: bool, cluster_list: List[Cluster]):
+        self.onedoc = onedoc
+        self.mdoc = mdoc
+        self.cluster_list = cluster_list
+
+
+class TopologyEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
+
+def customTopologyDecoder(topologyDict):
+    return namedtuple("TopologyDescriptor", topologyDict.keys())(*topologyDict.values())
+
+
+def precheck_hosts_availability(topology):
+    descriptor = topology.topology_descriptor
+    total_required_hosts = 0
+
+    if descriptor.onedoc:
+        return 1
+
+    if descriptor.mdoc:
+        total_required_hosts = 1
+        if descriptor.cluster_list:
+            total_required_hosts += descriptor.cluster_list[0].workers_number
+
+    else:
+        total_required_hosts = (
+            len(descriptor.cluster_list)
+            + sum(cluster.workers_number for cluster in descriptor.cluster_list)
+            + 1
+        )
+
+    return total_required_hosts
+
+
+def check_list(param_str: str):
+    """Check if the string is a valid list."""
+    try:
+        converted_list = ast.literal_eval(param_str)
+        if not isinstance(converted_list, list):
+            print(f"Error: {param_str} parameter is not a list")
+            return
+        else:
+            return converted_list
+    except (SyntaxError, ValueError) as e:
+        print(f"Error converting {param_str} string to list: {e}")
+        return
 
 
 def main():
@@ -11,6 +140,8 @@ def main():
     # Parse command-line arguments
     topologies_dir, available_hosts = sys.argv[1:3]
 
+    available_hosts = check_list(available_hosts)
+
     # Read all the json files in the folder `topologies_folder`
     json_files = [
         pos_json
@@ -18,9 +149,31 @@ def main():
         if pos_json.endswith(".json")
     ]
 
-    print(json_files)
+    total_available_hosts = len(available_hosts)
+    for topology in json_files:
+        # try:
+        with open(topologies_dir + topology, "r") as f:
+            topologyObj = json.load(f, object_hook=customTopologyDecoder)
 
-    print(available_hosts)
+            total_required_hosts = precheck_hosts_availability(topologyObj)
+
+            if total_required_hosts <= total_available_hosts:
+                total_available_hosts -= total_required_hosts
+
+                print(
+                    f"Required by {topology} : {total_required_hosts}, available: {len(available_hosts)}"
+                )
+            # print(
+            #    topology.topology_descriptor.onedoc,
+            #    topology.topology_descriptor.cluster_list[0],
+            # )
+
+    # except Exception as e:
+    #    print(f"Error: {e}")
+
+    # print(json_files)
+
+    # print(available_hosts)
 
 
 if __name__ == "__main__":

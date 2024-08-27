@@ -1,6 +1,12 @@
+---
 - name: 2. Host Provisioning Phase
   hosts: all
   gather_facts: false
+  vars:
+    workflow_mapping:
+      onedoc: "one_doc_deploy"
+      mdoc: "mdoc_deploy"
+      mdnc: "mdoc_deploy"
   tasks:
     - name: Check OAK_STATUS for each inventory host
       shell: |
@@ -35,6 +41,44 @@
       command: >
         /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "{{ testbed_tmp_path }}/{{ topologies_folder }}" "{{ available_hosts }}"
       register: result_output
+
+
+    - name: Read the JSON file
+      slurp:
+        src: "{{ testbed_tmp_path }}/dispatch.json"
+      register: json_content
+
+    - name: Decode and parse the JSON content
+      set_fact:
+        runs: "{{ json_content['content'] | b64decode | from_json }}"
+
+    - name: Dispatch onedoc workflows
+      workflow_launch:
+        workflow_template: "{{ workflow_mapping['onedoc'] }}"
+        extra_vars:
+          run_data: "{{ item }}"
+        wait: false
+      loop: "{{ runs['onedoc'] }}"
+      when: runs['onedoc'] is defined
+
+    - name: Dispatch mdoc workflows
+      workflow_launch:
+        workflow_template: "{{ workflow_mapping['mdoc'] }}"
+        extra_vars:
+          run_data: "{{ item }}"
+        wait: false
+      loop: "{{ runs['mdoc'] }}"
+      when: runs['mdoc'] is defined
+
+    - name: Dispatch mdnc workflows
+      workflow_launch:
+        workflow_template: "{{ workflow_mapping['mdnc'] }}"
+        extra_vars:
+          run_data: "{{ item }}"
+        wait: false
+      loop: "{{ runs['mdnc'] }}"
+      when: runs['mdnc'] is defined
+
 
     - name: (DEBUG)  Display the validation result
       ansible.builtin.debug:

@@ -8,11 +8,11 @@ def validate_topology(json_data):
         topology_descriptor = json_data["topology_descriptor"]
 
         # Validate one_doc_enabled
-        if not isinstance(topology_descriptor.get("one_doc_enabled"), bool):
+        if not isinstance(topology_descriptor.get("onedoc"), bool):
             return False
 
         # Validate together_root_cluster
-        if not isinstance(topology_descriptor.get("together_root_cluster"), bool):
+        if not isinstance(topology_descriptor.get("mdoc"), bool):
             return False
 
         # Validate cluster_list
@@ -25,7 +25,7 @@ def validate_topology(json_data):
             if not isinstance(cluster.get("cluster_number"), int):
                 return False
             # Validate number_of_nodes
-            if not isinstance(cluster.get("number_of_nodes"), int):
+            if not isinstance(cluster.get("workers_number"), int):
                 return False
 
             # Validate sla_descriptor inside cluster

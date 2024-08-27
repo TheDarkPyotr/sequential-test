@@ -1,11 +1,11 @@
 {
     "topology_descriptor": {
-    "one_doc_enabled": false, 
-    "together_root_cluster": false,
+    "onedoc": false, 
+    "mdoc": false,
     "cluster_list": [
       {
         "cluster_number": 2,
-        "number_of_nodes": 1,
+        "workers_number": 1,
         "sla_descriptor": {
             "sla_version" : "v2.0",
             "customerID" : "Admin",
@@ -59,7 +59,7 @@
       },
       {
         "cluster_number": 1,
-        "number_of_nodes": 1,
+        "workers_number": 1,
         "sla_descriptor": {
             "sla_version" : "v2.0",
             "customerID" : "Admin",
