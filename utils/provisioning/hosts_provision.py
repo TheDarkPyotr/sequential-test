@@ -152,7 +152,8 @@ def main():
     total_available_hosts = len(available_hosts)
     for topology in json_files:
         # try:
-        with open(topologies_dir + topology, "r") as f:
+        file_path = topologies_dir + "/" + topology
+        with open(file_path, "r") as f:
             topologyObj = json.load(f, object_hook=customTopologyDecoder)
 
             total_required_hosts = precheck_hosts_availability(topologyObj)
