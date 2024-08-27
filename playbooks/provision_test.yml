@@ -57,7 +57,7 @@
       awx.awx.job_launch:
         job_template: "{{ job_mapping['onedoc'] }}"
         extra_vars:
-          run_data: "{{ item }}"
+          input_data: "{{ item }}"
         job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
@@ -69,7 +69,7 @@
       awx.awx.job_launch:
         job_template: "{{ job_mapping['mdoc'] }}"
         extra_vars:
-          run_data: "{{ item }}"
+          input_data: "{{ item }}"
         job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
@@ -81,7 +81,7 @@
       awx.awx.job_launch:
         job_template: "{{ job_mapping['mdnc'] }}"
         extra_vars:
-          run_data: "{{ item }}"
+          input_data: "{{ item }}"
         job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"

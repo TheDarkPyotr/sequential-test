@@ -10,9 +10,9 @@
         - name: Show groups division
           debug:
             msg: |
-              group_root_full: {{ group_root_full }}
-              group_clusters_full: {{ group_clusters_full }}
-              group_workers_full: {{ group_workers_full }}
+              input_data.group_mndc_root: {{ input_data.group_mndc_root }}
+              input_data.group_mndc_clusters: {{ input_data.group_mndc_clusters }}
+              input_data.group_mndc_workers: {{ input_data.group_mndc_workers }}
 
         - name: Parsed topology descriptor
           debug:
@@ -20,7 +20,7 @@
 
         - name: Set JSON string for combination script
           set_fact:
-            json_input: "{{ {'topology_descriptor': topology_desc, 'group_clusters_full': group_clusters_full, 'group_workers_full': group_workers_full } | to_json }}"
+            json_input: "{{ {'topology_descriptor': topology_desc, 'input_data.group_mndc_clusters': input_data.group_mndc_clusters, 'input_data.group_mndc_workers': input_data.group_mndc_workers } | to_json }}"
 
         - include_role:
             name: support-execution
@@ -69,7 +69,7 @@
 
 ################################################## DEPLOY: ROOT ##################################################
 - name: Deploy root component for full topology
-  hosts: "{{ group_root_full }}"
+  hosts: "{{ input_data.group_mndc_root }}"
   vars:
     repo: "{{ oak_repo_link }}"
     path: "{{ oak_repo_path }}"
@@ -120,7 +120,7 @@
 ################################################## DEPLOY: CLUSTER ##################################################
 
 - name: Deploy cluster components for full topology
-  hosts: "{{ group_clusters_full }}"
+  hosts: "{{ input_data.group_mndc_clusters }}"
 
   tasks:
     - name: Set OAK_ROLE environment variables on cluster node {{ inventory_hostname }}
@@ -141,9 +141,9 @@
           Cluster IPs: "{{ cluster_map }}"
           Worker IPs: "{{ worker_map }}"
 
-    - name: Retrieve root hostname from group_root_full
+    - name: Retrieve root hostname from input_data.group_mndc_root
       set_fact:
-        root_name: "{{ group_root_full[0] }}"
+        root_name: "{{ input_data.group_mndc_root[0] }}"
 
     - name: Retrieve root IP address
       set_fact:
@@ -172,7 +172,7 @@
 ################################################## DEPLOY: WORKER ##################################################
 
 - name: Deploy worker components for full topology
-  hosts: "{{ group_workers_full }}"
+  hosts: "{{ input_data.group_mndc_workers }}"
   tasks:
     - name: Set OAK_ROLE environment variables on worker node {{ inventory_hostname }}
       ansible.builtin.lineinfile:

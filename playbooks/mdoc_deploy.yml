@@ -1,5 +1,5 @@
 - name: Deploy root and cluster components for MDOC topology
-  hosts: "{{ group_rc_together }}"
+  hosts: "{{ input_data.group_mdoc_root }}"
   gather_facts: false
   vars:
     repo: "{{ oak_repo_link }}"
@@ -50,12 +50,12 @@
         root_cluster_ip: "{{ root_cluster_ip }}"
 
 - name: Deploy worker components for full topology
-  hosts: "{{ group_rc_workers }}"
+  hosts: "{{ input_data.group_mdoc_workers }}"
   tasks:
 
-    - name: Retrieve root&cluster hostname from group_rc_together
+    - name: Retrieve root&cluster hostname from input_data.group_mdoc_root
       set_fact:
-        root_hostname: "{{ group_rc_together[0] }}"
+        root_hostname: "{{ input_data.group_mdoc_root[0] }}"
 
     - name: Retrieve root IP address
       set_fact:
