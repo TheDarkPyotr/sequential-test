@@ -61,6 +61,7 @@
         job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
+        wait: true
       loop: "{{ runs['onedoc'] }}"
       when: runs['onedoc'] is defined
 
