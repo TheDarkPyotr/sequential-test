@@ -33,7 +33,7 @@
 
     - name: Execute the Python script with sudo and parameters
       command: >
-        /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provisiong.py "/topologies/" "{{ available_hosts }}"
+        /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "/topologies/" "{{ available_hosts }}"
       register: result_output
 
     - name: List available hosts
