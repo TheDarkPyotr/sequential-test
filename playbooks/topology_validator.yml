@@ -58,7 +58,7 @@
         msg: "{{ topology_descriptor_content }}"
 
     - name: Execute validator script for {{ topology_descriptor }}
-      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/{{ topology_descriptor }}"
+      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/"
       register: validation_result
 
     - name: Check topology validity script execution

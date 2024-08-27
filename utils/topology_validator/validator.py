@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 
 
@@ -96,14 +97,28 @@ def validate_topology(json_data):
 
 
 if __name__ == "__main__":
-    json_file = sys.argv[1]
+    topologies_folder = sys.argv[1]
 
-    with open(json_file, "r") as f:
-        json_data = json.load(f)
+    # Read all the json files in the folder `topologies_folder`
+    json_files = [
+        pos_json
+        for pos_json in os.listdir(topologies_folder)
+        if pos_json.endswith(".json")
+    ]
 
-    validity = validate_topology(json_data)
+    print(json_files)
+    for json_file in json_files:
+        try:
+            with open(topologies_folder + "/" + json_file, "r") as f:
+                json_data = json.load(f)
 
-    if validity:
-        print("true")
-    else:
-        print("false")
+            validity = validate_topology(json_data)
+
+            if not validity:
+                print("false")
+                sys.exit(1)
+        except Exception:
+            print("false")
+            sys.exit(1)
+
+    print("true")
