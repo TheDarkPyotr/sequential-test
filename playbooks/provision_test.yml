@@ -2,11 +2,7 @@
 - name: 2. Host Provisioning Phase
   hosts: all
   gather_facts: false
-  vars:
-    workflow_mapping:
-      onedoc: "one_doc_deploy"
-      mdoc: "mdoc_deploy"
-      mdnc: "mdoc_deploy"
+
   tasks:
     - name: Check OAK_STATUS for each inventory host
       shell: |
@@ -32,6 +28,11 @@
 
 - name: 2. Host Provisioning Phase
   hosts: localhost
+  vars:
+    workflow_mapping:
+      onedoc: "one_doc_deploy"
+      mdoc: "mdoc_deploy"
+      mdnc: "mdoc_deploy"
   tasks:
     - name: Retrieve available hosts
       set_fact:
