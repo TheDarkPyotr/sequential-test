@@ -30,7 +30,7 @@
   hosts: localhost
   vars:
     job_mapping:
-      onedoc: "[SQ] 3. [1-DOC] Components Deploy"
+      onedoc: "SQ_1DOC_DEPLOY"
       mdoc: "[SQ] 3. [M-DOC] Components Deploy"
       mdnc: "[SQ] 3. [MDNC] Components Deploy"
   tasks:
