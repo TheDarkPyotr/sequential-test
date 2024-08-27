@@ -110,7 +110,7 @@ if __name__ == "__main__":
         try:
             topology_filepath = topologies_folder + json_file
             with open(topology_filepath, "r") as f:
-                json_data = {}  # json.load(f)
+                json_data = json.load(f)
 
             validity = validate_topology(json_data)
 
