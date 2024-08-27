@@ -58,6 +58,7 @@
         workflow_template: "{{ job_mapping['onedoc'] }}"
         extra_vars:
           input_data: "{{ item }}"
+          testbed_tmp_path: "{{ testbed_tmp_path }}"
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -69,6 +70,7 @@
         workflow_template: "{{ job_mapping['mdoc'] }}"
         extra_vars:
           input_data: "{{ item }}"
+          testbed_tmp_path: "{{ testbed_tmp_path }}"
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -80,6 +82,8 @@
         workflow_template: "{{ job_mapping['mdnc'] }}"
         extra_vars:
           input_data: "{{ item }}"
+          testbed_tmp_path: "{{ testbed_tmp_path }}"
+
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
