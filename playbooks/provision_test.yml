@@ -60,7 +60,7 @@
           run_data: "{{ item }}"
         job_type: run
         validate_certs: false
-        controller_oauthtoken: "{{ AWX_ADMIN_TOKEN }}"
+        controller_oauthtoken: "{{ token }}"
       loop: "{{ runs['onedoc'] }}"
       when: runs['onedoc'] is defined
 
