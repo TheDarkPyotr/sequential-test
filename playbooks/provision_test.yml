@@ -29,7 +29,7 @@
 - name: 2. Host Provisioning Phase
   hosts: localhost
   vars:
-    workflow_mapping:
+    job_mapping:
       onedoc: "one_doc_deploy"
       mdoc: "mdoc_deploy"
       mdnc: "mdoc_deploy"
@@ -53,30 +53,30 @@
       set_fact:
         runs: "{{ json_content['content'] | b64decode | from_json }}"
 
-    - name: Dispatch onedoc workflows
-      awx.awx.workflow_launch:
-        workflow_template: "{{ workflow_mapping['onedoc'] }}"
+    - name: Dispatch onedoc jobs
+      awx.awx.job_launch:
+        job_template: "{{ job_mapping['onedoc'] }}"
         extra_vars:
           run_data: "{{ item }}"
-        wait: false
+        job_type: run
       loop: "{{ runs['onedoc'] }}"
       when: runs['onedoc'] is defined
 
-    - name: Dispatch mdoc workflows
-      awx.awx.workflow_launch:
-        workflow_template: "{{ workflow_mapping['mdoc'] }}"
+    - name: Dispatch mdoc jobs
+      awx.awx.job_launch:
+        job_template: "{{ job_mapping['mdoc'] }}"
         extra_vars:
           run_data: "{{ item }}"
-        wait: false
+        job_type: run
       loop: "{{ runs['mdoc'] }}"
       when: runs['mdoc'] is defined
 
-    - name: Dispatch mdnc workflows
-      awx.awx.workflow_launch:
-        workflow_template: "{{ workflow_mapping['mdnc'] }}"
+    - name: Dispatch mdnc jobs
+      awx.awx.job_launch:
+        job_template: "{{ job_mapping['mdnc'] }}"
         extra_vars:
           run_data: "{{ item }}"
-        wait: false
+        job_type: run
       loop: "{{ runs['mdnc'] }}"
       when: runs['mdnc'] is defined
 
