@@ -36,13 +36,9 @@
         /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "/topologies/" "{{ available_hosts }}"
       register: result_output
 
-    - name: (DEBUG) Set environment variable with validation result
-      ansible.builtin.set_fact:
-        script_result: "{{ result_output.stdout }}"
-
     - name: (DEBUG)  Display the validation result
       ansible.builtin.debug:
-        msg: "script_result is {{ script_result }}"
+        msg: "script_result is {{ result_output }}"
 
     - name: List available hosts
       debug:
