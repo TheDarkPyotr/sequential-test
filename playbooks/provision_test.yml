@@ -70,6 +70,9 @@
         extra_vars:
           run_data: "{{ item }}"
         job_type: run
+        validate_certs: false
+        controller_oauthtoken: "{{ token }}"
+        wait: true
       loop: "{{ runs['mdoc'] }}"
       when: runs['mdoc'] is defined
 
@@ -79,6 +82,9 @@
         extra_vars:
           run_data: "{{ item }}"
         job_type: run
+        validate_certs: false
+        controller_oauthtoken: "{{ token }}"
+        wait: true
       loop: "{{ runs['mdnc'] }}"
       when: runs['mdnc'] is defined
 
