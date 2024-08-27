@@ -21,3 +21,7 @@ def main():
     print(json_files)
 
     print(available_hosts)
+
+
+if __name__ == "__main__":
+    main()
