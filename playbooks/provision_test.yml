@@ -53,7 +53,7 @@
         runs: "{{ json_content['content'] | b64decode | from_json }}"
 
     - name: Dispatch onedoc workflows
-      workflow_launch:
+      awx.awx.workflow_launch:
         workflow_template: "{{ workflow_mapping['onedoc'] }}"
         extra_vars:
           run_data: "{{ item }}"
@@ -62,7 +62,7 @@
       when: runs['onedoc'] is defined
 
     - name: Dispatch mdoc workflows
-      workflow_launch:
+      awx.awx.workflow_launch:
         workflow_template: "{{ workflow_mapping['mdoc'] }}"
         extra_vars:
           run_data: "{{ item }}"
@@ -71,7 +71,7 @@
       when: runs['mdoc'] is defined
 
     - name: Dispatch mdnc workflows
-      workflow_launch:
+      awx.awx.workflow_launch:
         workflow_template: "{{ workflow_mapping['mdnc'] }}"
         extra_vars:
           run_data: "{{ item }}"
