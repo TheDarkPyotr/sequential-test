@@ -1,0 +1,142 @@
+---
+################# 1DOC - Stop and Cleanup Components ##########################################
+- hosts: "{{ group_1doc }}"
+################# Stop and free worker nodes
+  roles:
+    - unset
+    - kill-all-workers
+  tasks:
+
+    # Stop and free cluster and root nodes
+    - name: (1DOC) Kill processes on node {{ inventory_hostname }}
+      command: "docker compose -f {{ oak_repo_path }}/run-a-cluster/1-DOC.yaml down"
+      become: true
+      ignore_errors: true
+
+    # Clean files on node
+    - name: (1DOC) Clean files node on node {{ inventory_hostname }}
+      ansible.builtin.include_role:
+        name: cleanup-root-cluster
+      vars:
+        repo_path: "{{ oak_repo_path }}"
+        net_repo_path: "{{ oak_net_repo_path }}"
+
+
+################# MDNC - Stop and Cleanup Components ##########################################
+####### Stop and free worker nodes
+- hosts: "{{ group_workers_full }}"
+  roles:
+    - unset
+    - kill-all-workers
+
+###### Stop and free cluster nodes
+- hosts: "{{ group_clusters_full }}"
+  tasks:
+    - name: (MDNC) Set components_path for cluster nodes
+      set_fact:
+        components_path: "/cluster_orchestrator/docker-compose.yml"
+
+    - name: (MDNC) Debug oak_repo_path and components_path
+      debug:
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ components_path }}" 
+
+    - name: (MDNC) Kill cluster processes on node {{ inventory_hostname }}
+      command: "docker compose -f {{ oak_repo_path }}{{ components_path }}  kill"
+      become: True
+      ignore_errors: true
+
+    - name: (MDNC) Clean cluster node on node {{ inventory_hostname }}
+      ansible.builtin.include_role:
+        name: cleanup-root-cluster
+      vars:
+        repo_path: "{{ oak_repo_path }}"
+        net_repo_path: "{{ oak_net_repo_path }}"
+
+    - name: (MDNC) Change status of cluster node {{ inventory_hostname }} to free
+      ansible.builtin.include_role:
+        name: unset
+
+###### Stop and free root nodes
+- hosts: "{{ group_root_full }}"
+  tasks:
+    - name: (MDNC) Set components_path for root node
+      set_fact:
+        components_path: "/root_orchestrator/docker-compose.yml"
+
+    - name: (MDNC) Debug oak_repo_path and components_path on node {{ inventory_hostname }} 
+      debug:
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ components_path }}"
+
+    - name: (MDNC) Kill root processes on node {{ inventory_hostname }}
+      include_role:
+        name: kill-root-cluster
+      vars:
+        components_path: "root_orchestrator/docker-compose.yml"
+        repo_path: "{{ oak_repo_path }}"
+
+    - name: (MDNC) Clean cluster node on node {{ inventory_hostname }}
+      include_role:
+        name: cleanup-root-cluster
+      vars:
+        components_path: "root_orchestrator/docker-compose.yml"
+        repo_path: "{{ oak_repo_path }}"
+        net_repo_path: "{{ oak_net_repo_path }}"
+
+    - name: Change status of cluster node {{ inventory_hostname }} to free
+      ansible.builtin.include_role:
+        name: unset
+###############################################################################################
+
+################# MDOC - Stop and Cleanup Components ##########################################
+####### Stop and free worker nodes
+- hosts: "{{ group_rc_workers }}"
+  roles:
+    - unset
+    - kill-all-workers
+
+###### Stop and free cluster and root nodes
+- hosts: "{{ group_rc_together }}"
+  tasks:
+    - name: (MDOC) Set cluster_components_path for cluster services
+      set_fact:
+        cluster_omponents_path: "/cluster_orchestrator/docker-compose.yml"
+
+    - name: (MDOC) Debug oak_repo_path and components_path
+      debug:
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ components_path }}"
+
+    - name: (MDOC) Kill cluster processes on node {{ inventory_hostname }}
+      command: "docker compose -f {{ oak_repo_path }}{{ cluster_omponents_path }}  kill"
+      become: True
+      ignore_errors: true
+
+    - name: (MDOC) Set root_components_path for cluster services
+      set_fact:
+        root_components_path: "/root_orchestrator/docker-compose.yml"
+
+    - name: (MDOC) Debug oak_repo_path and components_path
+      debug:
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ root_components_path }}"
+
+    - name: (MDOC) Kill root processes on node {{ inventory_hostname }}
+      command: "docker compose -f {{ oak_repo_path }}{{ cluster_omponents_path }}  kill"
+      become: True
+      ignore_errors: true
+
+    - name: (MDOC) Clean repository files from {{ inventory_hostname }}
+      ansible.builtin.include_role:
+        name: cleanup-root-cluster
+      vars:
+        repo_path: "{{ oak_repo_path }}"
+        net_repo_path: "{{ oak_net_repo_path }}"
+
+    - name: (MDOC) Change status of node {{ inventory_hostname }} to free
+      ansible.builtin.include_role:
+        name: unset
+################# MDOC - Stop and Cleanup Components #################
+
+
+    - include_tasks: github_results.yml
+      vars:
+        result: "Provision ended successfully, reserved hosts: {{ reserved_hosts }}"
+      when: ( reserved_hosts | length) > 0
