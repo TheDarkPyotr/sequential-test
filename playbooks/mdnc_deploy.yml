@@ -261,3 +261,16 @@
       become: true
       ignore_errors: false
 
+- name: Define stats for component status check
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Set stats for component status check
+      set_stats:
+        data:
+          group_1doc: ""
+          group_mdoc_root: ""
+          group_mdoc_workers: ""
+          group_mndc_root: "{{ input_data.group_mndc_root }}"
+          group_mndc_clusters: "{{ input_data.group_mndc_clusters }}"
+          group_mndc_workers: "{{ input_data.group_mndc_workers }}"
