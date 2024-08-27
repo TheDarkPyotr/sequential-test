@@ -131,6 +131,34 @@ def check_list(param_str: str):
         return
 
 
+def add_dispatch_group(topology_filename, topologyObj, dispatch_dict, reserved_hosts):
+
+    if topologyObj.topology_descriptor.onedoc:
+        item = {
+            "topology_filename": topology_filename,
+            "group_1doc": reserved_hosts,
+        }
+        dispatch_dict["onedoc"].append(item)
+    elif topologyObj.topology_descriptor.mdoc:
+        item = {
+            "topology_filename": topology_filename,
+            "group_mdoc_root": [reserved_hosts[0]],
+            "group_mdoc_workers": reserved_hosts[1:],
+        }
+        dispatch_dict["mdoc"].append(item)
+
+    else:
+        cluster_nodes = len(topologyObj.topology_descriptor.cluster_list)
+
+        item = {
+            "topology_filename": topology_filename,
+            "group_mndc_root": [reserved_hosts[0]],
+            "group_mndc_clusters": reserved_hosts[1 : cluster_nodes + 1],
+            "group_mndc_workers": reserved_hosts[cluster_nodes + 1 :],
+        }
+        dispatch_dict["mndc"].append(item)
+
+
 def main():
 
     if len(sys.argv) != 3:
@@ -150,27 +178,37 @@ def main():
     ]
 
     total_available_hosts = len(available_hosts)
-    for topology in json_files:
-        # try:
-        file_path = topologies_dir + "/" + topology
-        with open(file_path, "r") as f:
-            topologyObj = json.load(f, object_hook=customTopologyDecoder)
 
-            total_required_hosts = precheck_hosts_availability(topologyObj)
+    dispatch_dict = {"onedoc": [], "mdoc": [], "mndc": []}
 
-            if total_required_hosts <= total_available_hosts:
-                total_available_hosts -= total_required_hosts
+    for topology_filename in json_files:
+        try:
+            file_path = topologies_dir + "/" + topology_filename
+            with open(file_path, "r") as f:
+                topologyObj = json.load(f, object_hook=customTopologyDecoder)
 
-                print(
-                    f"Required by {topology} : {total_required_hosts}, available: {len(available_hosts)}"
-                )
-            # print(
-            #    topology.topology_descriptor.onedoc,
-            #    topology.topology_descriptor.cluster_list[0],
-            # )
+                total_required_hosts = precheck_hosts_availability(topologyObj)
 
-    # except Exception as e:
-    #    print(f"Error: {e}")
+                if total_required_hosts <= total_available_hosts:
+                    print(f"Available hosts: {available_hosts}")
+
+                    reserved_hosts = available_hosts[:total_required_hosts]
+                    print(f"Reserved hosts: {reserved_hosts}")
+                    available_hosts = available_hosts[total_required_hosts:]
+                    add_dispatch_group(
+                        topology_filename, topologyObj, dispatch_dict, reserved_hosts
+                    )
+
+                    total_available_hosts -= total_required_hosts
+        except Exception as e:
+            print(f"Error: {e}")
+
+    # Save dispatch_dict to a JSON file
+    with open(topologies_dir + "/dispatch.json", "w") as f:
+        try:
+            json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
+        finally:
+            f.close()
 
     # print(json_files)
 

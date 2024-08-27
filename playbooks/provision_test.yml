@@ -46,7 +46,7 @@
 
     - name: Read the JSON file
       slurp:
-        src: "{{ testbed_tmp_path }}/dispatch.json"
+        src: "{{ testbed_tmp_path }}/topologies/dispatch.json"
       register: json_content
 
     - name: Decode and parse the JSON content
