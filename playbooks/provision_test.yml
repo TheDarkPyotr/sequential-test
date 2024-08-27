@@ -59,6 +59,7 @@
         extra_vars:
           run_data: "{{ item }}"
         job_type: run
+        validate_certs: false
       loop: "{{ runs['onedoc'] }}"
       when: runs['onedoc'] is defined
 
