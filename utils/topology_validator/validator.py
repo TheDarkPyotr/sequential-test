@@ -111,11 +111,12 @@ if __name__ == "__main__":
         print(f"Accessing file: {json_file}")
         try:
             topology_filepath = topologies_folder + json_file
-            with open(topology_filepath, "r") as f:
-                print(f"Opened file: {topology_filepath}")
-                json_data = {}  # json.load(f)
 
-            validity = validate_topology(json_data)
+            # with open(topology_filepath, "r") as f:
+            print(f"Opened file: {topology_filepath}")
+            #    json_data = {}  # json.load(f)
+
+            validity = validate_topology({})
 
             if not validity:
                 print("false")
