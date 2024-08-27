@@ -43,7 +43,6 @@
     - name: List testbed repository files
       ansible.builtin.debug:
         msg: "{{ files.files | map(attribute='path') | list }}"
-        
 
     - name: Execute validator script for {{ topologies_folder }}
       command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/"

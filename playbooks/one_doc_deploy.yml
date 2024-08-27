@@ -78,8 +78,8 @@
       set_stats:
         data:
           group_1doc: "{{ input_data.group_1doc }}"
-          group_mdoc_root: ""
-          group_mdoc_workers: ""
-          group_mndc_root: ""
-          group_mndc_clusters: ""
-          group_mndc_workers: ""
+          group_mdoc_root: "[]"
+          group_mdoc_workers: "[]"
+          group_mndc_root: "[]"
+          group_mndc_clusters: "[]"
+          group_mndc_workers: "[]"
