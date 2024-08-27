@@ -126,9 +126,9 @@ def constrained_already_specified(constraints: list):
 def update_topology(clusters, workers, cluster_names, deploy_mode):
     """Update the topology with the available worker nodes."""
     for cluster in clusters:
-        number_of_nodes = cluster.get("number_of_nodes", 0)
-        assigned_workers = workers[:number_of_nodes]
-        del workers[:number_of_nodes]
+        workers_number = cluster.get("workers_number", 0)
+        assigned_workers = workers[:workers_number]
+        del workers[:workers_number]
 
         if cluster_names:
             cluster_suffix = cluster_names.pop(0)
@@ -142,7 +142,7 @@ def update_topology(clusters, workers, cluster_names, deploy_mode):
                 else:
                     assigned_worker = used_workers[service_index % len(used_workers)]
 
-                if deploy_mode == "rc" or deploy_mode == "full":
+                if deploy_mode == "mdoc" or deploy_mode == "mdnc":
 
                     if (
                         "constraints" not in service
@@ -173,7 +173,7 @@ def update_topology(clusters, workers, cluster_names, deploy_mode):
 def check_correspondence(json_data, workers, cluster_names, deploy_mode):
     """Check if the number of workers matches the required nodes and update the topology."""
     clusters = json_data.get("topology_descriptor", {}).get("cluster_list", [])
-    total_nodes = sum(cluster.get("number_of_nodes", 0) for cluster in clusters)
+    total_nodes = sum(cluster.get("workers_number", 0) for cluster in clusters)
 
     if len(workers) < total_nodes:
         print("Insufficient worker nodes.")
@@ -305,14 +305,10 @@ async def main_async():
     cluster_names = check_list(inventory_str)
 
     if validate_topology(json_data):
-        onedoc_enabled = json_data.get("topology_descriptor", {}).get(
-            "one_doc_enabled", False
-        )
-        rc_enabled = json_data.get("topology_descriptor", {}).get(
-            "together_root_cluster", False
-        )
+        onedoc_enabled = json_data.get("topology_descriptor", {}).get("onedoc", False)
+        rc_enabled = json_data.get("topology_descriptor", {}).get("mdoc", False)
 
-        deploy_mode = "one-doc" if onedoc_enabled else "rc" if rc_enabled else "full"
+        deploy_mode = "one-doc" if onedoc_enabled else "mdoc" if rc_enabled else "mdnc"
 
         updated_sla = check_correspondence(
             json_data, worker_list, cluster_names, deploy_mode
