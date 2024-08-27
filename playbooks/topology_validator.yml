@@ -44,20 +44,8 @@
       ansible.builtin.debug:
         msg: "{{ files.files | map(attribute='path') | list }}"
         
-    - name: Read {{ topology_descriptor }} topology descriptor JSON file
-      ansible.builtin.slurp:
-        src: "{{ temp_repo_dir.path }}/topologies/{{ topology_descriptor }}"
-      register: json_file_content
 
-    - name: Decode {{ topology_descriptor }} JSON content
-      set_fact:
-        topology_descriptor_content: "{{ json_file_content.content | b64decode }}"
-
-    - name: Display {{ topology_descriptor }}
-      ansible.builtin.debug:
-        msg: "{{ topology_descriptor_content }}"
-
-    - name: Execute validator script for {{ topology_descriptor }}
+    - name: Execute validator script for {{ topologies_folder }}
       command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/"
       register: validation_result
 
@@ -71,20 +59,15 @@
       ansible.builtin.set_fact:
         TOPOLOGY_VALIDITY: "{{ validation_result.stdout }}"
 
-    #- include_tasks: github_results.yml
-    #  vars:
-    #    result: "Topology description {{ topology_descriptor }} vadalition returned {{ TOPOLOGY_VALIDITY | bool}}"
-    #    parameters: "{{ topology_descriptor_content | to_json}}"
-
     - name: Stop execution if topology descriptor is invalid
       fail:
-        msg: "Topology descriptor {{ topology_descriptor }} is not valid"
+        msg: "Error validating {{ topologies_folder }} is not valid"
       when: not TOPOLOGY_VALIDITY
 
     - name: "Set facts for provisioning phase"
       set_stats:
         data:
-          topology_desc: "{{ topology_descriptor_content | to_json}}"
+          topologies_folder: "{{ topologies_folder }}"
           topology_validity: "{{ TOPOLOGY_VALIDITY | bool}}"
           oak_repo_commit: "{{ commit }}"
           testbed_tmp_path: "{{ temp_repo_dir.path }}"
