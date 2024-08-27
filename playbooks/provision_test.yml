@@ -33,7 +33,7 @@
 
     - name: Execute the Python script with sudo and parameters
       command: >
-        /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "/topologies/" "{{ available_hosts }}"
+        /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "{{ testbed_tmp_path }}/{{ topologies_folder }}" "{{ available_hosts }}"
       register: result_output
 
     - name: (DEBUG)  Display the validation result
