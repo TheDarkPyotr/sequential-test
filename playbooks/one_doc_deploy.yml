@@ -74,12 +74,25 @@
   hosts: localhost
   gather_facts: false
   tasks:
+
+    - name: Read {{ input_data.topology_filename }} topology descriptor JSON file
+      ansible.builtin.slurp:
+        src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
+      register: json_file_content
+
+    - name: Decode {{ input_data.topology_filename }} JSON content
+      set_fact:
+        topology_descriptor: "{{ json_file_content.content | b64decode }}"
+
     - name: Set stats for component status check
       set_stats:
         data:
           group_1doc: "{{ input_data.group_1doc }}"
           group_mdoc_root: "[]"
           group_mdoc_workers: "[]"
-          group_mndc_root: "[]"
-          group_mndc_clusters: "[]"
-          group_mndc_workers: "[]"
+          group_mdnc_root: "[]"
+          group_mdnc_clusters: "[]"
+          group_mdnc_workers: "[]"
+          onedoc: true
+          mdoc: false
+          topology_desc: "{{ topology_descriptor }}"
