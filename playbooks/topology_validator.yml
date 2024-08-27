@@ -2,7 +2,7 @@
 - name: 1. Topology Validator Phase
   hosts: localhost
   vars:
-    testbed_repo: "https://github.com/TheDarkPyotr/ansible-tests"
+    testbed_repo: "https://github.com/TheDarkPyotr/sequential-test"
     testbed_repo_branch: "main"
 
   gather_facts: false
