@@ -30,9 +30,9 @@
   hosts: localhost
   vars:
     job_mapping:
-      onedoc: "[SQ] 3. [1-DOC] Components Deploy"
-      mdoc: "[SQ] 3. [M-DOC] Components Deploy"
-      mdnc: "[SQ] 3. [MDNC] Components Deploy"
+      onedoc: "[SQ] 3. [1-DOC] Execution Phase"
+      mdoc: "[SQ] 3. [M-DOC] Execution Phase"
+      mdnc: "[SQ] 3. [MDNC] Execution Phase"
   tasks:
     - name: Retrieve available hosts
       set_fact:
@@ -54,11 +54,10 @@
         runs: "{{ json_content['content'] | b64decode | from_json }}"
 
     - name: Dispatch onedoc jobs
-      awx.awx.job_launch:
-        job_template: "{{ job_mapping['onedoc'] }}"
+      awx.awx.workflow_launch:
+        workflow_template: "{{ job_mapping['onedoc'] }}"
         extra_vars:
           input_data: "{{ item }}"
-        job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -66,11 +65,10 @@
       when: runs['onedoc'] is defined
 
     - name: Dispatch mdoc jobs
-      awx.awx.job_launch:
-        job_template: "{{ job_mapping['mdoc'] }}"
+      awx.awx.workflow_launch:
+        workflow_template: "{{ job_mapping['mdoc'] }}"
         extra_vars:
           input_data: "{{ item }}"
-        job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -78,11 +76,10 @@
       when: runs['mdoc'] is defined
 
     - name: Dispatch mdnc jobs
-      awx.awx.job_launch:
-        job_template: "{{ job_mapping['mdnc'] }}"
+      awx.awx.workflow_launch:
+        workflow_template: "{{ job_mapping['mdnc'] }}"
         extra_vars:
           input_data: "{{ item }}"
-        job_type: run
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
