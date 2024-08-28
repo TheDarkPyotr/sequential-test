@@ -94,7 +94,8 @@
         extra_vars:
           input_data: "{{ item }}"
           testbed_tmp_path: "{{ testbed_tmp_path }}"
-
+          onedoc: false
+          mdoc: false
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
