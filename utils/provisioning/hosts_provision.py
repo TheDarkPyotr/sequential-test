@@ -190,10 +190,10 @@ def main():
                 total_required_hosts = precheck_hosts_availability(topologyObj)
 
                 if total_required_hosts <= total_available_hosts:
-                    print(f"Available hosts: {available_hosts}")
+                    # print(f"Available hosts: {available_hosts}")
 
                     reserved_hosts = available_hosts[:total_required_hosts]
-                    print(f"Reserved hosts: {reserved_hosts}")
+                    # print(f"Reserved hosts: {reserved_hosts}")
                     available_hosts = available_hosts[total_required_hosts:]
                     add_dispatch_group(
                         topology_filename, topologyObj, dispatch_dict, reserved_hosts
@@ -212,6 +212,7 @@ def main():
                 json.dump({}, f)
 
             json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
+            print(json.dumps(dispatch_dict, cls=TopologyEncoder, indent=4))
         finally:
             f.close()
 
