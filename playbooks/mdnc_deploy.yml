@@ -197,6 +197,12 @@
         line: "OAK_ROLE=worker_{{ inventory_hostname }}"
         create: true
 
+    - name: Print llocalhost hostvars
+      debug:
+        msg: |
+          Cluster MAP: "{{ hostvars['localhost'] }}"
+          Worker MAP: "{{ hostvars['localhost'] }}"
+
     - name: Set environment variables for deployment node (worker {{ inventory_hostname }})
       set_fact:
         cluster_map: "{{ hostvars['localhost'].cluster_map.ansible_facts.cluster_map}}"
