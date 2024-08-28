@@ -42,6 +42,10 @@
       debug:
         msg: "Available hosts: {{ available_hosts }}"
 
+    - name: Remove localhost from available hosts
+      set_fact:
+        available_hosts: "{{ available_hosts | difference(['localhost']) }}"
+
     - name: Execute the Python script with sudo and parameters
       command: >
         /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "{{ testbed_tmp_path }}/{{ topologies_folder }}" "{{ available_hosts }}"
