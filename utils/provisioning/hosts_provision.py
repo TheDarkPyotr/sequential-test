@@ -152,9 +152,9 @@ def add_dispatch_group(topology_filename, topologyObj, dispatch_dict, reserved_h
 
         item = {
             "topology_filename": topology_filename,
-            "group_mndc_root": [reserved_hosts[0]],
-            "group_mndc_clusters": reserved_hosts[1 : cluster_nodes + 1],
-            "group_mndc_workers": reserved_hosts[cluster_nodes + 1 :],
+            "group_mdnc_root": [reserved_hosts[0]],
+            "group_mdnc_clusters": reserved_hosts[1 : cluster_nodes + 1],
+            "group_mdnc_workers": reserved_hosts[cluster_nodes + 1 :],
         }
         dispatch_dict["mdnc"].append(item)
 
