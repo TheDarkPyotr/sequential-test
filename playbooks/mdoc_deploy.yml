@@ -120,12 +120,12 @@
     - name: Set stats for component status check
       set_stats:
         data:
-          group_1doc: ""
+          group_1doc: "[]"
           group_mdoc_root: "{{ input_data.group_mdoc_root }}"
           group_mdoc_workers: "{{ input_data.group_mdoc_workers }}"
-          group_mdnc_root: ""
-          group_mdnc_clusters: ""
-          group_mdnc_workers: ""
+          group_mdnc_root: "[]"
+          group_mdnc_clusters: "[]"
+          group_mdnc_workers: "[]"
           onedoc: false
           mdoc: true
           topology_desc: "{{ topology_descriptor }}"
