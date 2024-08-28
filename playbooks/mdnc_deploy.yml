@@ -34,7 +34,7 @@
             
         - name: Set topology_desc as JSON
           set_fact:
-            topology_desc: "{{ topology_descriptor_content | to_json }}"
+            topology_desc: "{{ topology_descriptor_content | from_json }}"
 
         - name: Print the topology descriptor
           debug:
