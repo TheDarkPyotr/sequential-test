@@ -14,36 +14,27 @@
               input_data.group_mdnc_clusters: {{ input_data.group_mdnc_clusters }}
               input_data.group_mdnc_workers: {{ input_data.group_mdnc_workers }}
 
-        - name: Read {{ input_data.topology_filename  }} topology descriptor JSON file
+        - name: Execute the support Script
+          command: >
+            /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/mdnc_deploy/combination.py "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}" "{{ input_data.group_mdnc_clusters }}" "{{ input_data.group_mdnc_workers }}"
+          register: result_output
+
+        - name: Set dictionary result output
+          ansible.builtin.set_fact:
+            script_result: "{{ result_output.stdout }}"
+
+        - name: Read  topology descriptor JSON file
           ansible.builtin.slurp:
             src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
           register: json_file_content
 
-        - name: Decode {{ input_data.topology_filename  }} JSON content
+        - name: Decode JSON content
           set_fact:
-            topology_descriptor: "{{ json_file_content.content | b64decode }}"
-
+            topology_descriptor_content: "{{ json_file_content.content | b64decode }}"
+            
         - name: Set topology_desc as JSON
           set_fact:
-            topology_desc: "{{ topology_descriptor | to_json }}"
-
-        - name: Parsed topology descriptor
-          debug:
-            msg: "{{ topology_descriptor }}"
-
-        - name: Set JSON string for combination script
-          set_fact:
-            json_input: "{{ {'topology_descriptor': topology_descriptor, 'group_mdnc_clusters': input_data.group_mdnc_clusters, 'group_mdnc_workers': input_data.group_mdnc_workers } | to_json }}"
-
-        - include_role:
-            name: support-execution
-          vars:
-            script_name: "/utils/mdnc_deploy/combination.py"
-            script_args: "{{ json_input }}"
-
-        - name: Set topology_desc as JSON
-          set_fact:
-            topology_desc: "{{ topology_desc | to_json }}"
+            topology_desc: "{{ topology_descriptor_content | to_json }}"
 
         - name: Set facts for cluster and worker associations
           set_fact:
