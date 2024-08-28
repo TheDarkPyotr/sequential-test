@@ -47,7 +47,6 @@
   debug:
     msg: "{{ files }}"
 
-
 - name: Install script dependencies
   shell: |
     pip3 install -r "{{ testbed_tmp_path }}"/utils/topology-app-deploy/requirements.txt
@@ -87,44 +86,3 @@
 - name: Decode failed process dictionary
   set_fact:
     services_fail_process_dict: "{{ slurped_file_failed['content'] | b64decode | from_json }}"
-
-- name: Debug worker successfully executed process dictionary
-  debug:
-    msg: "{{ worker_process_dict }}"
-
-- name: Debug worker failed executed process dictionary
-  debug:
-    msg: "{{ services_fail_process_dict }}"
-
-- name: Retrieve machine inventory hostnames from IPs
-  set_fact:
-    ip_to_hostname: >-
-      {{
-        ip_to_hostname | default({})
-        | combine({item.key: hostvars | dict2items | selectattr('value.ansible_host', 'equalto', item.key) | map(attribute='key') | first})
-      }}
-  loop: "{{ worker_process_dict | dict2items }}"
-  vars:
-    ip_to_hostname: {}
-
-- name: Debug IP hostname mapping
-  debug:
-    msg: "{{ ip_to_hostname }}"
-
-- name: Check if process is running on the remote host
-  shell: |
-    if pgrep -f "{{ item.value }}"; then
-      echo "Process {{ item.value }} is running"
-    else
-      echo "Process {{ item.value }} not running"
-      exit 1
-    fi
-  delegate_to: "{{ ip_to_hostname[item.key] }}"
-  loop: "{{ worker_process_dict | dict2items }}"
-  register: process_check_results 
-  ignore_errors: false
-
-- name: Print the output of the process check task
-  debug:
-    msg: "{{ item.stdout_lines[2] }}"
-  loop: "{{ process_check_results.results }}"

@@ -44,7 +44,7 @@
     - role: topology-app-deploy
       vars:
         local_hostname: "{{ local_hostname }}"
-        group_root: "{{ group_mdnc_root}}"
+        group_root: "{{ group_mdnc_root }}"
         group_clusters: "{{ group_mdnc_clusters }}"
         topology_desc: "{{ topology_desc }}"
       when: not onedoc and not mdoc
