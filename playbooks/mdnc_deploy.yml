@@ -36,6 +36,10 @@
           set_fact:
             topology_desc: "{{ topology_descriptor_content | to_json }}"
 
+        - name: Print the topology descriptor
+          debug:
+            msg: "{{ topology_desc }}"
+
         - name: Set facts for cluster and worker associations
           set_fact:
             clusters: "{{ topology_desc.topology_descriptor.cluster_list }}"
