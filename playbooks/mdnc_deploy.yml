@@ -23,6 +23,10 @@
           ansible.builtin.set_fact:
             script_result: "{{ result_output.stdout }}"
 
+        - name: Debug the script result
+          debug:
+            msg: "script_result is {{ script_result }}"
+
         - name: Read  topology descriptor JSON file
           ansible.builtin.slurp:
             src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
@@ -79,7 +83,7 @@
         - name: Print the cluster and worker associations
           debug:
             msg: |
-              Cluster Host Map: {{ cluster_host_ranges.ansible_facts.cluster_host_ranges }}
+              Cluster Host Map: {{ cluster_map }}
               Worker Map: {{ worker_map }}
       when: not onedoc and not mdoc
 
@@ -200,8 +204,8 @@
     - name: Print llocalhost hostvars
       debug:
         msg: |
-          Cluster MAP: "{{ hostvars['localhost'] }}"
-          Worker MAP: "{{ hostvars['localhost'] }}"
+          Cluster MAP: "{{ hostvars['localhost'].cluster_map }}"
+          Worker MAP: "{{ hostvars['localhost'].worker_map }}"
 
     - name: Set environment variables for deployment node (worker {{ inventory_hostname }})
       set_fact:
