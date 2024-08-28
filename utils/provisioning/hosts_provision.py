@@ -156,7 +156,7 @@ def add_dispatch_group(topology_filename, topologyObj, dispatch_dict, reserved_h
             "group_mndc_clusters": reserved_hosts[1 : cluster_nodes + 1],
             "group_mndc_workers": reserved_hosts[cluster_nodes + 1 :],
         }
-        dispatch_dict["mndc"].append(item)
+        dispatch_dict["mdnc"].append(item)
 
 
 def main():
@@ -179,7 +179,7 @@ def main():
 
     total_available_hosts = len(available_hosts)
 
-    dispatch_dict = {"onedoc": [], "mdoc": [], "mndc": []}
+    dispatch_dict = {"onedoc": [], "mdoc": [], "mdnc": []}
 
     for topology_filename in json_files:
         try:
@@ -206,6 +206,11 @@ def main():
     # Save dispatch_dict to a JSON file
     with open(topologies_dir + "/dispatch.json", "w") as f:
         try:
+            # Check if dispatch_dict['onedoc'] is empty
+            no_dispatch = all(len(value) == 0 for value in dispatch_dict.values())
+            if no_dispatch:
+                json.dump({}, f)
+
             json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
         finally:
             f.close()

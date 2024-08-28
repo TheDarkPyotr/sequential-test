@@ -38,6 +38,10 @@
       set_fact:
         available_hosts: "{{ hostvars | dict2items | selectattr('value.host_available', 'defined') | selectattr('value.host_available', 'eq', True) | map(attribute='key') | list }}"
 
+    - name: List available hosts
+      debug:
+        msg: "Available hosts: {{ available_hosts }}"
+
     - name: Execute the Python script with sudo and parameters
       command: >
         /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/provisioning/hosts_provision.py "{{ testbed_tmp_path }}/{{ topologies_folder }}" "{{ available_hosts }}"
@@ -52,6 +56,13 @@
     - name: Decode and parse the JSON content
       set_fact:
         runs: "{{ json_content['content'] | b64decode | from_json }}"
+
+
+    - name: (DEBUG)  Display the validation result
+      ansible.builtin.debug:
+        msg: "script_result is {{ result_output.stdout }}"
+      ignore_errors: true
+      when: result_output is defined
 
     - name: Dispatch onedoc jobs
       awx.awx.workflow_launch:
@@ -91,42 +102,23 @@
       when: runs['mdnc'] is defined
 
 
-    - name: (DEBUG)  Display the validation result
-      ansible.builtin.debug:
-        msg: "script_result is {{ result_output }}"
-
-    - name: List available hosts
-      debug:
-        msg: "Available hosts: {{ available_hosts }}"
-
-    - name: Requested VMs display
-      debug:
-        msg: "Total VMs: {{ requested_vms }}"
-
-    - name: Set availability flag based on available hosts
-      set_fact:
-        enough_hosts: "{{ available_hosts | length >= requested_vms | int }}"
-
-    - name: Availability failure
+    - name: Not enough hosts to dispact any jobs
       fail:
-        msg: "Not enough available hosts. Required: {{ requested_vms }}, Available: {{ available_hosts | length }}"
-      when: not enough_hosts
+        msg: "No jobs dispatched"
+      ignore_errors: true
+      when: runs['onedoc'] is not defined and runs['mdoc'] is not defined and runs['mdnc'] is not defined
 
-    - name: Compute required hosts to tag as busy
-      set_fact:
-        hosts_to_tag_busy: "{{ available_hosts[:requested_vms | int] | list }}"
+#    - name: Tag the required number of available hosts as busy, setting OAK_STATUS
+#      when: enough_hosts
+#      delegate_to: "{{ item }}"
+#      become: true
+#      lineinfile:
+#        path: /etc/environment
+#        create: yes
+#        regexp: '^OAK_STATUS='
+#        line: 'OAK_STATUS=busy'
+#      with_items: "{{ hosts_to_tag_busy }}"
 
-    - name: Tag the required number of available hosts as busy, setting OAK_STATUS
-      when: enough_hosts
-      delegate_to: "{{ item }}"
-      become: true
-      lineinfile:
-        path: /etc/environment
-        create: yes
-        regexp: '^OAK_STATUS='
-        line: 'OAK_STATUS=busy'
-      with_items: "{{ hosts_to_tag_busy }}"
-
-    - name: Store reserved_hosts group in stats
-      set_fact:
-        reserved_hosts: "{{ available_hosts[:requested_vms | int] | list }}"
+#    - name: Store reserved_hosts group in stats
+#      set_fact:
+#        reserved_hosts: "{{ available_hosts[:requested_vms | int] | list }}"
