@@ -32,9 +32,13 @@
           set_fact:
             topology_descriptor_content: "{{ json_file_content.content | b64decode }}"
             
-        - name: Set topology_desc as JSON
+        - name: Debug the type of decoded content
+          debug:
+            msg: "Type of topology_descriptor_content: {{ topology_descriptor_content.__class__.__name__ }}"
+
+        - name: Set topology_desc as a parsed JSON object if content is a string
           set_fact:
-            topology_desc: "{{ topology_descriptor_content | from_json }}"
+            topology_desc: "{{ topology_descriptor_content if topology_descriptor_content is not string else topology_descriptor_content | from_json }}"
 
         - name: Print the topology descriptor
           debug:
