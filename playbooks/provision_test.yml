@@ -62,13 +62,13 @@
         runs: "{{ json_content['content'] | b64decode | from_json }}"
 
 
-    - name: (DEBUG)  Display the validation result
+    - name: (DEBUG)  Display dispatching results
       ansible.builtin.debug:
-        msg: "script_result is {{ result_output.stdout }}"
+        msg: "{{ result_output.stdout }}"
       ignore_errors: true
       when: result_output is defined
 
-    - name: Dispatch onedoc jobs
+    - name: ⏳ Dispatch ONEDOC scenario topology jobs ⚙️
       awx.awx.workflow_launch:
         workflow_template: "{{ job_mapping['onedoc'] }}"
         extra_vars:
@@ -80,7 +80,7 @@
       loop: "{{ runs['onedoc'] }}"
       when: runs['onedoc'] is defined
 
-    - name: Dispatch mdoc jobs
+    - name: ⏳ Dispatch MDOC scenario topology jobs ⚙️
       awx.awx.workflow_launch:
         workflow_template: "{{ job_mapping['mdoc'] }}"
         extra_vars:
@@ -92,7 +92,7 @@
       loop: "{{ runs['mdoc'] }}"
       when: runs['mdoc'] is defined
 
-    - name: Dispatch mdnc jobs
+    - name: ⏳ Dispatch MDNC scenario topology jobs ⚙️
       awx.awx.workflow_launch:
         workflow_template: "{{ job_mapping['mdnc'] }}"
         extra_vars:

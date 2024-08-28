@@ -212,7 +212,7 @@ def main():
                 json.dump({}, f)
 
             json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
-            print(json.dumps(dispatch_dict, cls=TopologyEncoder, indent=4))
+            print(dispatch_dict)
         finally:
             f.close()
 
