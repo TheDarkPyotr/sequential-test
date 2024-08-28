@@ -63,7 +63,7 @@
         - name: Set cluster host ranges
           set_fact:
             cluster_host_ranges: >
-              {{ dict(cluster_ids | zip(reserved_hosts[1:(1 | int + (num_clusters_int | int))]) | list) }}
+              {{ dict(cluster_ids | zip(input_data.group_mdnc_clusters[0:(1 | int + (num_clusters_int | int))]) | list) }}
           register: cluster_host_ranges
 
         - name: Set worker map
