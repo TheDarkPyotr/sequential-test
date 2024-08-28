@@ -222,9 +222,7 @@ async def deploy_application(updated_sla: dict):
                     else:
                         print(f"Application is not a dict type: {app}")
         else:
-            failed[cluster["cluster_number"]] = (
-                f"SLA_POST_FAILED_{status_code}_{instance_body}"
-            )
+            failed[cluster["cluster_number"]] = f"SLA_POST_FAILED_{status_code}_ERROR"
 
     return success, failed
 
