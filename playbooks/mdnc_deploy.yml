@@ -187,7 +187,7 @@
       vars:
         rootIP: "{{ root_ip }}"
         clusterName: "CL{{ inventory_hostname }}"
-        clusterLocation: ""
+        clusterLocation: "Garching2"
 
 ################################################## DEPLOY: WORKER ##################################################
 
