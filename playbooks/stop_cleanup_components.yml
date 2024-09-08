@@ -24,13 +24,13 @@
 
 ################# MDNC - Stop and Cleanup Components ##########################################
 ####### Stop and free worker nodes
-- hosts: "{{ group_workers_full }}"
+- hosts: "{{ group_mdnc_workers }}"
   roles:
     - unset
     - kill-all-workers
 
 ###### Stop and free cluster nodes
-- hosts: "{{ group_clusters_full }}"
+- hosts: "{{ group_mdnc_clusters }}"
   tasks:
     - name: (MDNC) Set components_path for cluster nodes
       set_fact:
@@ -57,7 +57,7 @@
         name: unset
 
 ###### Stop and free root nodes
-- hosts: "{{ group_root_full }}"
+- hosts: "{{ group_mdnc_root }}"
   tasks:
     - name: (MDNC) Set components_path for root node
       set_fact:
@@ -89,13 +89,13 @@
 
 ################# MDOC - Stop and Cleanup Components ##########################################
 ####### Stop and free worker nodes
-- hosts: "{{ group_rc_workers }}"
+- hosts: "{{ group_mdoc_workers }}"
   roles:
     - unset
     - kill-all-workers
 
 ###### Stop and free cluster and root nodes
-- hosts: "{{ group_rc_together }}"
+- hosts: "{{ group_mdoc_root }}"
   tasks:
     - name: (MDOC) Set cluster_components_path for cluster services
       set_fact:
