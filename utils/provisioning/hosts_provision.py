@@ -194,12 +194,12 @@ def main():
 
                     reserved_hosts = available_hosts[:total_required_hosts]
                     # print(f"Reserved hosts: {reserved_hosts}")
-                    available_hosts = available_hosts[total_required_hosts:]
+                    # available_hosts = available_hosts[total_required_hosts:]
                     add_dispatch_group(
                         topology_filename, topologyObj, dispatch_dict, reserved_hosts
                     )
 
-                    total_available_hosts -= total_required_hosts
+                    # total_available_hosts -= total_required_hosts
         except Exception as e:
             print(f"Error: {e}")
 
