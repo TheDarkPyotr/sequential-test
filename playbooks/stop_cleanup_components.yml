@@ -61,24 +61,24 @@
   tasks:
     - name: (MDNC) Set components_path for root node
       set_fact:
-        components_path: "/root_orchestrator/docker-compose.yml"
+        root_components_path: "/root_orchestrator/docker-compose.yml"
 
     - name: (MDNC) Debug oak_repo_path and components_path on node {{ inventory_hostname }} 
       debug:
-        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ components_path }}"
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ root_components_path }}"
 
     - name: (MDNC) Kill root processes on node {{ inventory_hostname }}
       include_role:
         name: kill-root-cluster
       vars:
-        components_path: "root_orchestrator/docker-compose.yml"
+        components_path: "{{ root_components_path }}"
         repo_path: "{{ oak_repo_path }}"
 
     - name: (MDNC) Clean cluster node on node {{ inventory_hostname }}
       include_role:
         name: cleanup-root-cluster
       vars:
-        components_path: "root_orchestrator/docker-compose.yml"
+        components_path: "{{ root_components_path }}"
         repo_path: "{{ oak_repo_path }}"
         net_repo_path: "{{ oak_net_repo_path }}"
 
@@ -103,7 +103,7 @@
 
     - name: (MDOC) Debug oak_repo_path and components_path
       debug:
-        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ components_path }}"
+        msg: "oak_repo_path: {{ oak_repo_path }}, components_path: {{ cluster_omponents_path }}"
 
     - name: (MDOC) Kill cluster processes on node {{ inventory_hostname }}
       command: "docker compose -f {{ oak_repo_path }}{{ cluster_omponents_path }}  kill"
