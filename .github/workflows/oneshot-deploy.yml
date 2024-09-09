@@ -27,4 +27,4 @@ jobs:
         with:
           AWX_URL: "https://cmvm20.cit.tum.de"
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
-          AWX_TEMPLATE_ID: "17"
+          AWX_TEMPLATE_ID: "18"
