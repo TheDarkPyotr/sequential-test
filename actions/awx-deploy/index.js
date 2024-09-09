@@ -16,6 +16,7 @@ async function triggerAWX() {
     const workflowTemplateId = core.getInput('AWX_TEMPLATE_ID');
     const pullRequestBranch = core.getInput('PR_BRANCH');
     const pullRequestCommit = core.getInput('PR_COMMIT');
+    const pullRequestUsername = core.getInput('PR_USERNAME');
 
     const headers = {
       'Authorization': `Bearer ${token}`,
@@ -30,6 +31,7 @@ async function triggerAWX() {
     // Print the URL, template ID, branch, and commit
     console.log(`Branch: ${pullRequestBranch}`);
     console.log(`Commit: ${pullRequestCommit}`);
+    console.log('Username: ${pullRequestUsername}');
 
     // Step 1: Trigger the workflow job template
     const jobLaunchUrl = `${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;

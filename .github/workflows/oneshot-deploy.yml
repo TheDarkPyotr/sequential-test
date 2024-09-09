@@ -28,5 +28,6 @@ jobs:
           AWX_URL: "https://cmvm20.cit.tum.de"
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
           AWX_TEMPLATE_ID: "18"
-          PR_BRANCH: ${{ github.head_ref }}
-          PR_COMMIT: ${{ github.sha }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_USER: ${{ github.event.pull_request.head.user }}
+          PR_COMMIT: ${{ github.event.pull_request.head.sha }}
