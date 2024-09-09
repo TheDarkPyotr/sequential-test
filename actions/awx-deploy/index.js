@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const axios = require('axios');
 const https = require('https');
-const sslRootCAs = require('ssl-root-cas/latest');
+const sslRootCAs = require('ssl-root-cas');
 
 
 async function triggerAWX() {
