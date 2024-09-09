@@ -1,6 +1,10 @@
 const core = require('@actions/core');
 const axios = require('axios');
 
+const https = require('https');
+
+
+
 async function triggerAWX() {
   try {
     const awxUrl = core.getInput('AWX_URL');
@@ -16,9 +20,14 @@ async function triggerAWX() {
     console.log(`AWX URL: ${awxUrl}`);
     console.log(`Workflow Template ID: ${workflowTemplateId}`);
 
+    const agent = new https.Agent({
+        rejectUnauthorized: false 
+      });
+      
+
     // Step 1: Trigger the workflow job template
     const jobLaunchUrl = `https://${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
-    const response = await axios.post(jobLaunchUrl, {}, { headers });
+    const response = await axios.post(jobLaunchUrl, {}, { headers, httpsAgent: agent });
 
     console.log(`response: ${response}`);
     const jobId = response.data.workflow_job;  // ID of the launched job
