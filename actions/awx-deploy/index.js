@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const axios = require('axios');
 const https = require('https');
-const sslRootCAs = require('ssl-root-cas/latest');
+const sslRootCAs = require('ssl-root-cas');
 
 // Add SSL root CAs to the global HTTPS agent
 https.globalAgent.options.ca = sslRootCAs.create();
