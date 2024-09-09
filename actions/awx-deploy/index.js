@@ -40,7 +40,7 @@ async function triggerAWX() {
     let status = '';
 
     while (true) {
-      const jobResponse = await axios.get(jobStatusUrl, { headers });
+      const jobResponse = await axios.get(jobStatusUrl, { headers, httpsAgent: agent });
       status = jobResponse.data.status;
 
       console.log(`Current job status: ${status}`);
