@@ -1,9 +1,10 @@
 const core = require('@actions/core');
 const axios = require('axios');
-
 const https = require('https');
+const sslRootCAs = require('ssl-root-cas/latest');
 
-
+// Add SSL root CAs to the global HTTPS agent
+https.globalAgent.options.ca = sslRootCAs.create();
 
 async function triggerAWX() {
   try {
@@ -20,18 +21,12 @@ async function triggerAWX() {
     console.log(`AWX URL: ${awxUrl}`);
     console.log(`Workflow Template ID: ${workflowTemplateId}`);
 
-    const agent = new https.Agent({
-        rejectUnauthorized: false 
-      });
-      
-
     // Step 1: Trigger the workflow job template
     const jobLaunchUrl = `${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
-    const response = await axios.post(jobLaunchUrl, {}, { headers, httpsAgent: agent });
+    const response = await axios.post(jobLaunchUrl, {}, { headers });
 
     console.log(`response: ${response}`);
     const jobId = response.data.workflow_job;  // ID of the launched job
-
 
     console.log(`AWX workflow job triggered: ${jobId}`);
 
@@ -40,7 +35,7 @@ async function triggerAWX() {
     let status = '';
 
     while (true) {
-      const jobResponse = await axios.get(jobStatusUrl, { headers, httpsAgent: agent });
+      const jobResponse = await axios.get(jobStatusUrl, { headers });
       status = jobResponse.data.status;
 
       console.log(`Current job status: ${status}`);
