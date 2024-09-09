@@ -1,0 +1,21 @@
+name: Deploy with AWX on PR Approval
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  deploy:
+    if: ${{ github.event.review.state == 'approved' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Trigger and wait for AWX deployment
+        uses: ./actions/awx-deploy
+        env:
+          AWX_URL: ${{ secrets.TOWER_HOST }}
+          AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
+          AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
