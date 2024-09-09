@@ -1,20 +1,18 @@
 {
     "name": "awx-deploy-action",
     "version": "1.0.0",
-    "description": "GitHub Action to trigger and monitor an AWX deployment",
+    "description": "A GitHub Action to trigger Ansible AWX deployments and wait for the result",
     "main": "index.js",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "author": "Luca Pinta",
+    "license": "MIT",
     "dependencies": {
-      "@actions/core": "^1.11.0",
-      "axios": "^1.4.0",
+      "axios": "^1.3.5",
+      "@actions/core": "^1.9.0",
       "ssl-root-cas": "^2.2.0"
-    },
-    "engines": {
-      "node": ">=12.x"
-    },
-    "author": "",
-    "license": "MIT"
+
+    }
   }
   
