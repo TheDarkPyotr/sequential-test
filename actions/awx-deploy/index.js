@@ -1,13 +1,16 @@
 const core = require('@actions/core');
 const axios = require('axios');
 const https = require('https');
-const sslRootCAs = require('ssl-root-cas');
+const sslRootCAs = require('ssl-root-cas/latest');
 
-// Add SSL root CAs to the global HTTPS agent
-https.globalAgent.options.ca = sslRootCAs.create();
 
 async function triggerAWX() {
   try {
+
+    // Add SSL root CAs to the global HTTPS agent
+    https.globalAgent.options.ca = sslRootCAs.create();
+
+
     const awxUrl = core.getInput('AWX_URL');
     const token = core.getInput('AWX_TOKEN');
     const workflowTemplateId = core.getInput('AWX_TEMPLATE_ID'); // ID of the workflow job template
