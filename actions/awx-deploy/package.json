@@ -1,5 +1,5 @@
 {
-    "name": "awx-deploy-action",
+    "name": "awx-action",
     "version": "1.0.0",
     "description": "A GitHub Action to trigger Ansible AWX deployments and wait for the result",
     "main": "index.js",
