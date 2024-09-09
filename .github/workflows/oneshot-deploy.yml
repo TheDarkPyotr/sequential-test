@@ -24,7 +24,7 @@ jobs:
 
       - name: Trigger and wait for AWX deployment
         uses: ./actions/awx-deploy
-        env:
+        with:
           AWX_URL: "cmvm20.cit.tum.de"
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
           AWX_TEMPLATE_ID: "17"
