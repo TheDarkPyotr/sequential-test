@@ -13,14 +13,14 @@ async function triggerAWX() {
     };
 
     // Step 1: Trigger the workflow job template
-    const jobLaunchUrl = `https://${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
+    const jobLaunchUrl = `${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
     const response = await axios.post(jobLaunchUrl, {}, { headers });
     const jobId = response.data.workflow_job;  // ID of the launched job
 
     console.log(`AWX workflow job triggered: ${jobId}`);
 
     // Step 2: Poll the job status
-    const jobStatusUrl = `https://${awxUrl}/api/v2/workflow_jobs/${jobId}/`;
+    const jobStatusUrl = `${awxUrl}/api/v2/workflow_jobs/${jobId}/`;
     let status = '';
 
     while (true) {
