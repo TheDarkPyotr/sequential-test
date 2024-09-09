@@ -1,4 +1,4 @@
-name: Deploy with AWX on PR Approval
+name: Testbed Oneshot - Modular Scenarios Test Deployment
 
 on:
   pull_request_review:
@@ -28,3 +28,5 @@ jobs:
           AWX_URL: "https://cmvm20.cit.tum.de"
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
           AWX_TEMPLATE_ID: "18"
+          PR_BRANCH: ${{ github.head_ref }}
+          PR_COMMIT: ${{ github.sha }}
