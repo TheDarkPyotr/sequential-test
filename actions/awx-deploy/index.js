@@ -50,17 +50,17 @@ async function triggerAWX() {
       const jobResponse = await axios.get(jobStatusUrl, { headers });
       status = jobResponse.data.status;
 
-      console.log(`Current job status: ${status}`);
+      console.log(`⚙️ Current job status: ${status} ⏳`);
 
       if (status === 'successful') {
-        console.log('Deployment successful!');
+        console.log('🎉 ✅ 🎉  Test deployment successful! 🎉 ✅ 🎉');
         return;
       } else if (['failed', 'error', 'canceled'].includes(status)) {
-        throw new Error(`Deployment failed with status: ${status}`);
+        throw new Error(` 🔴 Deployment failed with status: ${status} 🔴 `);
       }
 
-      // Wait for 10 seconds before checking the status again
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      // Wait for 2 minutes before checking the status again
+      await new Promise(resolve => setTimeout(resolve, 120000));
     }
 
   } catch (error) {

@@ -3,7 +3,7 @@
 - hosts: "{{ group_1doc }}"
 ################# Stop and free worker nodes
   roles:
-    - unset
+    - unset-role-availability
     - kill-all-workers
   tasks:
 
@@ -26,7 +26,7 @@
 ####### Stop and free worker nodes
 - hosts: "{{ group_mdnc_workers }}"
   roles:
-    - unset
+    - unset-role-availability
     - kill-all-workers
 
 ###### Stop and free cluster nodes
@@ -54,7 +54,7 @@
 
     - name: (MDNC) Change status of cluster node {{ inventory_hostname }} to free
       ansible.builtin.include_role:
-        name: unset
+        name: unset-role-availability
 
 ###### Stop and free root nodes
 - hosts: "{{ group_mdnc_root }}"
@@ -84,14 +84,14 @@
 
     - name: Change status of cluster node {{ inventory_hostname }} to free
       ansible.builtin.include_role:
-        name: unset
+        name: unset-role-availability
 ###############################################################################################
 
 ################# MDOC - Stop and Cleanup Components ##########################################
 ####### Stop and free worker nodes
 - hosts: "{{ group_mdoc_workers }}"
   roles:
-    - unset
+    - unset-role-availability
     - kill-all-workers
 
 ###### Stop and free cluster and root nodes
@@ -132,5 +132,5 @@
 
     - name: (MDOC) Change status of node {{ inventory_hostname }} to free
       ansible.builtin.include_role:
-        name: unset
+        name: unset-role-availability
 ################# MDOC - Stop and Cleanup Components #################
