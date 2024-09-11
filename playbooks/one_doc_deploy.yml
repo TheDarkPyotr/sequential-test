@@ -61,6 +61,7 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
+        commit: "{{ oak_repo_commit }}"
 
     - name: Run node-engine on node {{ inventory_hostname }}
       environment:
