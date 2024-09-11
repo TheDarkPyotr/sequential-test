@@ -1,15 +1,18 @@
 ---
 - name: 2. Host Provisioning Phase
   hosts: all
-  gather_facts: false
-
+  gather_facts: true
   tasks:
     - name: Check OAK_STATUS for each inventory host
       shell: |
         echo $OAK_STATUS
       register: oak_status
 
-    - name: Set host availability if not busy 
+    - name: OAK_STATUS value for each inventory host
+      debug:
+        msg: "{{ oak_status }}"
+
+    - name: Set host availability if not busy
       set_fact:
         host_available: "{{ oak_status.stdout != 'busy' }}"
       when: oak_status.stdout is defined
