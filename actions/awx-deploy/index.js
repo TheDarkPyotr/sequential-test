@@ -53,10 +53,10 @@ async function triggerAWX() {
       console.log(`⚙️ Current job status: ${status} ⏳`);
 
       if (status === 'successful') {
-        console.log('🎉 ✅ 🎉  Test deployment successful! 🎉 ✅ 🎉');
+        console.log('🎉 ✅ 🎉  Tests passed successfully! 🎉 ✅ 🎉');
         return;
       } else if (['failed', 'error', 'canceled'].includes(status)) {
-        throw new Error(` 🔴 Deployment failed with status: ${status} 🔴 `);
+        throw new Error(` 🔴 Tests execution failed with status: ${status} 🔴 `);
       }
 
       // Wait for 1 minute before checking the status again

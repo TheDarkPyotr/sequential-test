@@ -1,4 +1,4 @@
-name: Testbed Oneshot - Modular Scenarios Test Deployment
+name: Testbed Oneshot - Multiple Scenarios Test Deployment
 
 on:
   pull_request_review:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy:
+    name: Testbed Oneshot Execution
     if: ${{ github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
 
