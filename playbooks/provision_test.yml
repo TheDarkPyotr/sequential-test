@@ -116,10 +116,11 @@
     - rescue:
 
         - name: Free selected hosts in case of failure
-          delegate_to: "{{ item }}"
-          include_role:
-            name: unset-role-availability
-          with_items: "{{ available_hosts }}"
+          ansible.builtin.play:
+            hosts: "{{ available_hosts }}"
+            roles:
+              - role: unset-role-availability
+
 
         - name: Fail the playbook
           fail:
