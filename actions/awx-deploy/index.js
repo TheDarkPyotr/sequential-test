@@ -59,8 +59,8 @@ async function triggerAWX() {
         throw new Error(` 🔴 Deployment failed with status: ${status} 🔴 `);
       }
 
-      // Wait for 2 minutes before checking the status again
-      await new Promise(resolve => setTimeout(resolve, 120000));
+      // Wait for 1 minute before checking the status again
+      await new Promise(resolve => setTimeout(resolve, 60000));
     }
 
   } catch (error) {

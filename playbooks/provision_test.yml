@@ -114,14 +114,15 @@
           when: runs['mdnc'] is defined
 
     - rescue:
+        - name: "Call unset-role-availability role for all available hosts"
+          include_role:
+            name: unset-role-availability
+            apply:
+              delegate_to: "{{ host }}"
+          loop: "{{ available_hosts }}"
+          loop_control:
+            loop_var: host
 
-        - name: Free selected hosts in case of failure
-          ansible.builtin.play:
-            hosts: "{{ available_hosts }}"
-            roles:
-              - role: unset-role-availability
-
-
-        - name: Fail the playbook
+        - name: Report failure to dispatch jobs
           fail:
             msg: "Failed to dispatch jobs"
