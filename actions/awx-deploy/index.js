@@ -14,7 +14,7 @@ async function triggerAWX() {
     const awxUrl = core.getInput('AWX_URL');
     const token = core.getInput('AWX_TOKEN');
     const workflowTemplateId = core.getInput('AWX_TEMPLATE_ID');
-    const pullRequestBranch = core.getInput('PR_BRANCH');
+    const pullRequestBranch = "349-make-nodeengine-systemd-compatible" //core.getInput('PR_BRANCH');
     const pullRequestCommit = "53a60f07d85ecbbff87e483cfde40f6cce7a386e" //core.getInput('PR_COMMIT');
     const pullRequestUser = core.getInput('PR_USER');
 
