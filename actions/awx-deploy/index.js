@@ -16,7 +16,7 @@ async function triggerAWX() {
     const workflowTemplateId = core.getInput('AWX_TEMPLATE_ID');
     const pullRequestBranch = core.getInput('PR_BRANCH');
     const pullRequestCommit = core.getInput('PR_COMMIT');
-    const pullRequestUsername = core.getInput('PR_USERNAME');
+    const pullRequestUser = core.getInput('PR_USER');
 
     const headers = {
       'Authorization': `Bearer ${token}`,
@@ -26,7 +26,7 @@ async function triggerAWX() {
     const extraVars = {
       branch: pullRequestBranch,
       commit: pullRequestCommit,
-      username: pullRequestUsername
+      username: pullRequestUser
     };
 
     // Print the URL, template ID, branch, and commit
