@@ -34,7 +34,8 @@
       mdoc: "[SQ] 3. [M-DOC] Execution Phase"
       mdnc: "[SQ] 3. [MDNC] Execution Phase"
   tasks:
-    - block:
+    - name: Pipeline Consistency Block
+      block:
         - name: Retrieve available hosts
           set_fact:
             available_hosts: "{{ hostvars | dict2items | selectattr('value.host_available', 'defined') | selectattr('value.host_available', 'eq', True) | map(attribute='key') | list }}"
@@ -113,7 +114,7 @@
           loop: "{{ runs['mdnc'] }}"
           when: runs['mdnc'] is defined
 
-    - rescue:
+      rescue:
         - name: "Call unset-role-availability role for all available hosts"
           include_role:
             name: unset-role-availability
