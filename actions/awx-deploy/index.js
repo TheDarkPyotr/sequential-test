@@ -26,6 +26,7 @@ async function triggerAWX() {
     const extraVars = {
       branch: pullRequestBranch,
       commit: pullRequestCommit,
+      username: pullRequestUsername
     };
 
     // Print the URL, template ID, branch, and commit
