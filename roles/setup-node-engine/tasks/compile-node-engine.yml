@@ -5,7 +5,7 @@
     repo: "{{ oak_repo_link }}"
     path: "{{ oak_repo_path }}"
     branch: "{{ oak_repo_version }}"
-    commit: "{{ commit }}"
+    commit: "{{ oak_repo_commit }}"
 
 
 - name: Check if Go is installed
