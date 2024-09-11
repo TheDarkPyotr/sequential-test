@@ -1,4 +1,2 @@
 # sequential-test
-
-
-
+hash test
