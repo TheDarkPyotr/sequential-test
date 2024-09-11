@@ -74,6 +74,8 @@
         extra_vars:
           input_data: "{{ item }}"
           testbed_tmp_path: "{{ testbed_tmp_path }}"
+          oak_repo_version: "{{ oak_repo_branch }}"
+          oak_repo_commit: "{{ oak_repo_commit }}"
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -86,6 +88,8 @@
         extra_vars:
           input_data: "{{ item }}"
           testbed_tmp_path: "{{ testbed_tmp_path }}"
+          oak_repo_version: "{{ oak_repo_branch }}"
+          oak_repo_commit: "{{ oak_repo_commit }}"
         validate_certs: false
         controller_oauthtoken: "{{ token }}"
         wait: true
@@ -98,6 +102,8 @@
         extra_vars:
           input_data: "{{ item }}"
           testbed_tmp_path: "{{ testbed_tmp_path }}"
+          oak_repo_version: "{{ oak_repo_branch }}"
+          oak_repo_commit: "{{ oak_repo_commit }}"
           onedoc: false
           mdoc: false
         validate_certs: false
@@ -110,7 +116,6 @@
     - name: Not enough hosts to dispact any jobs
       fail:
         msg: "No jobs dispatched"
-      ignore_errors: true
       when: runs['onedoc'] is not defined and runs['mdoc'] is not defined and runs['mdnc'] is not defined
 
 #    - name: Tag the required number of available hosts as busy, setting OAK_STATUS
@@ -127,3 +132,4 @@
 #    - name: Store reserved_hosts group in stats
 #      set_fact:
 #        reserved_hosts: "{{ available_hosts[:requested_vms | int] | list }}"
+

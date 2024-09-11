@@ -19,8 +19,8 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
-        commit: "{{ commit }}"
-      
+        commit: "{{ oak_repo_commit }}"
+
     - name: Start 1DOC components (node {{ inventory_hostname }})
       include_role:
         name: start-1-doc

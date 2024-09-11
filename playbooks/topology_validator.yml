@@ -1,10 +1,6 @@
 ---
 - name: 1. Topology Validator Phase
   hosts: localhost
-  vars:
-    testbed_repo: "https://github.com/TheDarkPyotr/sequential-test"
-    testbed_repo_branch: "main"
-
   gather_facts: false
 
   tasks:
@@ -68,5 +64,4 @@
         data:
           topologies_folder: "{{ topologies_folder }}"
           topology_validity: "{{ TOPOLOGY_VALIDITY | bool}}"
-          oak_repo_commit: "{{ commit }}"
           testbed_tmp_path: "{{ temp_repo_dir.path }}"

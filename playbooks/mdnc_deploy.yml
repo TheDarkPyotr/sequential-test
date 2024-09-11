@@ -94,6 +94,8 @@
     repo: "{{ oak_repo_link }}"
     path: "{{ oak_repo_path }}"
     branch: "{{ oak_repo_version }}"
+    commit: "{{ oak_repo_commit }}"
+
 
   tasks:
     - name: Set OAK_ROLE environment variables on root node
@@ -121,6 +123,8 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
+        commit: "{{ oak_repo_commit }}"
+
 
     - name: Retrieve rootIP address from hostname
       set_fact:
@@ -180,6 +184,8 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
+        commit: "{{ oak_repo_commit }}"
+
 
     - name: Run cluster entrypoint for node {{ inventory_hostname }}
       include_role:
