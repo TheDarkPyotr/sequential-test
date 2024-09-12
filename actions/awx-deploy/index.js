@@ -14,8 +14,8 @@ async function triggerAWX() {
     const awxUrl = core.getInput('AWX_URL');
     const token = core.getInput('AWX_TOKEN');
     const workflowTemplateId = core.getInput('AWX_TEMPLATE_ID');
-    const pullRequestBranch = "develop" //core.getInput('PR_BRANCH');
-    const pullRequestCommit = "HEAD" //core.getInput('PR_COMMIT');
+    const pullRequestBranch = core.getInput('PR_BRANCH');
+    const pullRequestCommit = core.getInput('PR_COMMIT');
     const pullRequestUser = core.getInput('PR_USER');
 
     const headers = {
@@ -35,7 +35,7 @@ async function triggerAWX() {
     console.log(`👷 Approved by: ${pullRequestUser}`);
 
     // Step 1: Trigger the workflow job template
-    const jobLaunchUrl = `${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
+    const jobLaunchUrl = `https://${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;
     const response = await axios.post(jobLaunchUrl, { extra_vars: extraVars }, { headers });
 
     const jobId = response.data.workflow_job;  // ID of the launched job
@@ -43,7 +43,7 @@ async function triggerAWX() {
     console.log(`🆔 Execution ID: ${jobId}`);
 
     // Step 2: Poll the job status
-    const jobStatusUrl = `${awxUrl}/api/v2/workflow_jobs/${jobId}/`;
+    const jobStatusUrl = `https://${awxUrl}/api/v2/workflow_jobs/${jobId}/`;
     let status = '';
 
     while (true) {

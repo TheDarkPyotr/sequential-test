@@ -67,7 +67,7 @@
             runs: "{{ json_content['content'] | b64decode | from_json }}"
 
 
-        - name: ℹ️ Topologies execution plan & node selected ℹ️
+        - name: ℹ️ Dispatch execution plan & selected hosts list ℹ️
           ansible.builtin.debug:
             msg: "{{ result_output.stdout }}"
           ignore_errors: true
