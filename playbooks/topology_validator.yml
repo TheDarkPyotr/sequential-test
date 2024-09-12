@@ -41,7 +41,7 @@
         msg: "{{ files.files | map(attribute='path') | list }}"
 
     - name: Execute validator script for {{ topologies_folder }}
-      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/"
+      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/{{ topologies_folder }}/"
       register: validation_result
 
     - name: Check topology validity script execution

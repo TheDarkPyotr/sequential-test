@@ -114,7 +114,7 @@
   tasks:
     - name: Read {{ input_data.topology_filename }} topology descriptor JSON file
       ansible.builtin.slurp:
-        src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
+        src: "{{ testbed_tmp_path }}/{{ topologies_folder }}/{{ input_data.topology_filename }}"
       register: json_file_content
 
     - name: Decode {{ input_data.topology_filename }} JSON content
