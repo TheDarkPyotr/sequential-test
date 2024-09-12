@@ -130,6 +130,15 @@
           loop_control:
             loop_var: host
 
+        - import_tasks: stop-cleanup-components.yml
+          vars:
+            group_1doc: "{{ run['reserved_hosts'] }}"
+            group_mdoc_root: "{{ run['reserved_hosts'] }}"
+            group_mdoc_workers: "{{ run['reserved_hosts'] }}"
+            group_mdnc_root: "{{ run['reserved_hosts'] }}"
+            group_mdnc_clusters: "{{ run['reserved_hosts'] }}"
+            group_mdnc_workers: "{{ run['reserved_hosts'] }}"
+           
         - name: Report failure to dispatch jobs
           fail:
             msg: "Failed to dispatch jobs"
