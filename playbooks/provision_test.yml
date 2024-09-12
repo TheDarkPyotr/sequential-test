@@ -147,6 +147,9 @@
               group_mdnc_clusters: "{{ available_hosts }}"
               group_mdnc_workers: "{{ available_hosts }}"
             job_type: run
+            validate_certs: false
+            controller_oauthtoken: "{{ token }}"
+            wait: true
 
         - name: Report failure to dispatch jobs
           fail:
