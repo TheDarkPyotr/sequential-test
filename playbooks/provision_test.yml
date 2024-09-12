@@ -73,6 +73,11 @@
           ignore_errors: true
           when: result_output is defined
 
+        - name: "Debug runs['reserved_hosts']"
+          debug:
+            msg: "{{ runs['reserved_hosts'] }}"
+          when: runs['reserved_hosts'] is defined
+
         - name: ⏳ Dispatch ONEDOC scenario topology jobs ⚙️
           awx.awx.workflow_launch:
             workflow_template: "{{ job_mapping['onedoc'] }}"
@@ -129,16 +134,6 @@
           loop: "{{ available_hosts }}"
           loop_control:
             loop_var: host
-
-        - name: "Fallback to restore the initial state"
-          import_tasks: stop_cleanup_components.yml
-          vars:
-            group_1doc: "{{ runs['reserved_hosts'] }}"
-            group_mdoc_root: "{{ runs['reserved_hosts'] }}"
-            group_mdoc_workers: "{{ runs['reserved_hosts'] }}"
-            group_mdnc_root: "{{ runs['reserved_hosts'] }}"
-            group_mdnc_clusters: "{{ runs['reserved_hosts'] }}"
-            group_mdnc_workers: "{{ runs['reserved_hosts'] }}"
            
         - name: Report failure to dispatch jobs
           fail:
