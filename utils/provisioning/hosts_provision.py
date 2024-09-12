@@ -160,7 +160,7 @@ def add_dispatch_group(topology_filename, topologyObj, dispatch_dict, reserved_h
         }
         dispatch_dict["mdnc"].append(item)
 
-    dispatch_dict["reserved_hosts"] = dispatch_dict["reserved_hosts"] + reserved_hosts
+    dispatch_dict["reserved_hosts"].extend(reserved_hosts)
 
 
 def main():
