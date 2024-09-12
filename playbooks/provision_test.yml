@@ -136,14 +136,14 @@
             loop_var: host
 
         - name: "⚠️ Fallback to restore the initial state ⚠️"
-          import_tasks: stop_cleanup_components.yml
+          ansible.builtin.import_playbook: stop_cleanup_components.yml
           vars:
-            group_1doc: "{{ available_hosts }}"
-            group_mdoc_root: "{{ available_hosts }}"
-            group_mdoc_workers: "{{ available_hosts }}"
-            group_mdnc_root: "{{ available_hosts }}"
-            group_mdnc_clusters: "{{ available_hosts }}"
-            group_mdnc_workers: "{{ available_hosts }}"
+            group_1doc: "all"
+            group_mdoc_root: "all"
+            group_mdoc_workers: "all"
+            group_mdnc_root: "all"
+            group_mdnc_clusters: "all"
+            group_mdnc_workers: "all"
    
         - name: Report failure to dispatch jobs
           fail:
