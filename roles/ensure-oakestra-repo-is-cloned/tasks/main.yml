@@ -10,6 +10,7 @@
     dest: "{{ path }}"
     version: "{{ branch }}"
     update: true
+    force: true
 
 - name: Check if {{ commit }} exists on branch {{ branch }}
   ansible.builtin.command:
