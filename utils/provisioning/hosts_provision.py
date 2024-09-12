@@ -15,6 +15,7 @@ class Microservice:
         microservice_namespace: str,
         virtualization: str,
         cmd: List[str],
+        expected_output: str,
         memory: int,
         vcpus: int,
         vgpus: int,
@@ -32,6 +33,7 @@ class Microservice:
         self.microservice_namespace = microservice_namespace
         self.virtualization = virtualization
         self.cmd = cmd
+        self.expected_output = expected_output
         self.memory = memory
         self.vcpus = vcpus
         self.vgpus = vgpus
