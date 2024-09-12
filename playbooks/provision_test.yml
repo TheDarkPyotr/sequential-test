@@ -130,7 +130,8 @@
           loop_control:
             loop_var: host
 
-        - import_tasks: stop-cleanup-components.yml
+        - name: "Fallback to restore the initial state"
+          ansible.builtin.import_playbook: stop_cleanup_components.yml
           vars:
             group_1doc: "{{ run['reserved_hosts'] }}"
             group_mdoc_root: "{{ run['reserved_hosts'] }}"
