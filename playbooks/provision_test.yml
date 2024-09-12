@@ -127,16 +127,8 @@
           when: runs['mdnc'] is defined
 
       rescue:
-        - name: "Call unset-role-availability role for all available hosts"
-          include_role:
-            name: unset-role-availability
-            apply:
-              delegate_to: "{{ host }}"
-          loop: "{{ available_hosts }}"
-          loop_control:
-            loop_var: host
-
-        - name: Fallback to failure cleanup job for failure scenario
+        # Ensure consistent cleanup in case of failure
+        - name: ⚠️ Fallback to failure cleanup job for failure scenario ⚠️
           awx.awx.job_launch:
             job_template: "{{ job_mapping['failure_cleanup'] }}"
             extra_vars:

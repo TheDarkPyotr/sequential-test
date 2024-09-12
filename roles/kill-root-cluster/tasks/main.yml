@@ -15,4 +15,3 @@
   command: "docker compose -f {{ repo_path }}/{{ components_path }}  kill"
   become: true
   ignore_errors: true
-  when: "{{ group_clusters_full | length > 0 }}"
