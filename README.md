@@ -1,2 +1,1 @@
-# sequential-test
-hash test
+# Oneshot Testbed Structure

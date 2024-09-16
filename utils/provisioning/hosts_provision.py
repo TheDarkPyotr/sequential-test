@@ -15,6 +15,7 @@ class Microservice:
         microservice_namespace: str,
         virtualization: str,
         cmd: List[str],
+        expected_output: str,
         memory: int,
         vcpus: int,
         vgpus: int,
@@ -32,6 +33,7 @@ class Microservice:
         self.microservice_namespace = microservice_namespace
         self.virtualization = virtualization
         self.cmd = cmd
+        self.expected_output = expected_output
         self.memory = memory
         self.vcpus = vcpus
         self.vgpus = vgpus
@@ -158,6 +160,10 @@ def add_dispatch_group(topology_filename, topologyObj, dispatch_dict, reserved_h
         }
         dispatch_dict["mdnc"].append(item)
 
+    dispatch_dict["reserved_hosts"] = list(
+        set(dispatch_dict["reserved_hosts"] + reserved_hosts)
+    )
+
 
 def main():
 
@@ -179,7 +185,7 @@ def main():
 
     total_available_hosts = len(available_hosts)
 
-    dispatch_dict = {"onedoc": [], "mdoc": [], "mdnc": []}
+    dispatch_dict = {"reserved_hosts": [], "onedoc": [], "mdoc": [], "mdnc": []}
 
     for topology_filename in json_files:
         try:
@@ -210,9 +216,12 @@ def main():
             no_dispatch = all(len(value) == 0 for value in dispatch_dict.values())
             if no_dispatch:
                 json.dump({}, f)
-
-            json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
-            print(dispatch_dict)
+            else:
+                dispatch_dict["reserved_hosts"] = list(
+                    set(dispatch_dict["reserved_hosts"])
+                )
+                json.dump(dispatch_dict, f, cls=TopologyEncoder, indent=4)
+                print(dispatch_dict)
         finally:
             f.close()
 

@@ -16,7 +16,7 @@
 
         - name: Execute the support Script
           command: >
-            /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/mdnc_deploy/combination.py "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}" "{{ input_data.group_mdnc_clusters }}" "{{ input_data.group_mdnc_workers }}"
+            /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/mdnc_deploy/combination.py "{{ testbed_tmp_path }}/{{ topologies_folder }}/{{ input_data.topology_filename }}" "{{ input_data.group_mdnc_clusters }}" "{{ input_data.group_mdnc_workers }}"
           register: result_output
 
         - name: Set dictionary result output
@@ -29,7 +29,7 @@
 
         - name: Read  topology descriptor JSON file
           ansible.builtin.slurp:
-            src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
+            src: "{{ testbed_tmp_path }}/{{ topologies_folder }}/{{ input_data.topology_filename }}"
           register: json_file_content
 
         - name: Decode JSON content
@@ -94,14 +94,16 @@
     repo: "{{ oak_repo_link }}"
     path: "{{ oak_repo_path }}"
     branch: "{{ oak_repo_version }}"
+    commit: "{{ oak_repo_commit }}"
+
 
   tasks:
-    - name: Set OAK_ROLE environment variables on root node
-      ansible.builtin.lineinfile:
-        path: /etc/environment
-        regexp: '^OAK_ROLE='
-        line: 'OAK_ROLE=root'
-        create: true
+    - name: Set OAK_STATUS and OAK_ROLE by including role
+      include_role:
+        name: set-role-availability
+      vars:
+        role: "root"
+        status: "busy"
 
     - name: Set environment variables for deployment root (node {{ inventory_hostname }})
       set_fact:
@@ -121,6 +123,8 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
+        commit: "{{ oak_repo_commit }}"
+
 
     - name: Retrieve rootIP address from hostname
       set_fact:
@@ -143,12 +147,12 @@
   hosts: "{{ input_data.group_mdnc_clusters }}"
 
   tasks:
-    - name: Set OAK_ROLE environment variables on cluster node {{ inventory_hostname }}
-      ansible.builtin.lineinfile:
-        path: /etc/environment
-        regexp: '^OAK_ROLE='
-        line: "OAK_ROLE=cluster_{{ inventory_hostname }}"
-        create: yes
+    - name: Set OAK_STATUS and OAK_ROLE by including role
+      include_role:
+        name: set-role-availability
+      vars:
+        role: "cluster_{{ inventory_hostname }}"
+        status: "busy"
 
     - name: Set environment variables for deployment cluster
       set_fact:
@@ -180,6 +184,8 @@
         path: "{{ oak_repo_path }}"
         repo: "{{ oak_repo_link }}"
         branch: "{{ oak_repo_version }}"
+        commit: "{{ oak_repo_commit }}"
+
 
     - name: Run cluster entrypoint for node {{ inventory_hostname }}
       include_role:
@@ -194,12 +200,12 @@
 - name: Deploy worker components for full topology
   hosts: "{{ input_data.group_mdnc_workers }}"
   tasks:
-    - name: Set OAK_ROLE environment variables on worker node {{ inventory_hostname }}
-      ansible.builtin.lineinfile:
-        path: /etc/environment
-        regexp: '^OAK_ROLE='
-        line: "OAK_ROLE=worker_{{ inventory_hostname }}"
-        create: true
+    - name: Set OAK_STATUS and OAK_ROLE by including role
+      include_role:
+        name: set-role-availability
+      vars:
+        role: "worker_{{ inventory_hostname }}"
+        status: "busy"
 
     - name: Print llocalhost hostvars
       debug:
@@ -293,7 +299,7 @@
   tasks:
     - name: Read {{ input_data.topology_filename  }} topology descriptor JSON file
       ansible.builtin.slurp:
-        src: "{{ testbed_tmp_path }}/topologies/{{ input_data.topology_filename }}"
+        src: "{{ testbed_tmp_path }}/{{ topologies_folder }}/{{ input_data.topology_filename }}"
       register: json_file_content
 
     - name: Decode {{ input_data.topology_filename  }} JSON content

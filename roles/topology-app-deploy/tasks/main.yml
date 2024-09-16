@@ -6,15 +6,15 @@
       | map(attribute='value.local_hostname.stdout')
       | list }}
 
-- name: Available hostnames display
+- name: Debug workers hostname(s)
   debug:
     msg: "Available hostnames: {{ workers_hostname }}"
 
-- name: Print group_clusters
+- name: Debug cluster(s) group
   debug:
     msg: "group_clusters: {{ group_clusters }}"
 
-- name: Print group_root
+- name: Debug root group
   debug:
     msg: "group_root: {{ group_root }}"
 
@@ -37,21 +37,11 @@
     state: latest
     executable: pip3
 
-- name: Show current files in the directory
-  ansible.builtin.find:
-    paths: "{{ playbook_dir }}"
-    recurse: yes
-  register: files
-
-- name: Print current files in the directory
-  debug:
-    msg: "{{ files }}"
-
-- name: Install script dependencies
+- name: Install update_sla.py script dependencies
   shell: |
     pip3 install -r "{{ testbed_tmp_path }}"/utils/topology-app-deploy/requirements.txt
 
-- name: Execute the Python script with sudo and parameters
+- name: Execute update_sla.py for app deploy and status retrieval
   command: >
     /usr/bin/python3 "{{ testbed_tmp_path }}"/utils/topology-app-deploy/update_sla.py "/tmp/topology_desc.json" "{{ workers_json }}" "{{ group_clusters }}" "{{ group_root }}"
   register: result_output
@@ -69,20 +59,76 @@
   debug:
     msg: "{{ updated_sla }}"
 
-- name: Read dict of successfully executed processes
+- name: Read the process statuses file
   slurp:
-    src: /tmp/run_process_dictionary.json
-  register: slurped_file_success
+    src: /tmp/process_statuses.json
+  register: slurped_process_statuses
 
-- name: Read dict of failed executed processes
-  slurp:
-    src: /tmp/failed_process_dictionary.json
-  register: slurped_file_failed
-
-- name: Decode success process dictionary
+- name: Decode the process statuses JSON
   set_fact:
-    worker_process_dict: "{{ slurped_file_success['content'] | b64decode | from_json }}"
+    process_status_dict: "{{ slurped_process_statuses['content'] | b64decode | from_json }}"
 
-- name: Decode failed process dictionary
+- name: Debug the decoded process statuses
+  debug:
+    msg: "{{ process_status_dict }}"
+
+- name: Retrieve machine inventory hostnames from IPs
   set_fact:
-    services_fail_process_dict: "{{ slurped_file_failed['content'] | b64decode | from_json }}"
+    ip_to_hostname: >-
+      {{
+        ip_to_hostname | default({})
+        | combine({item.key: hostvars | dict2items | selectattr('value.ansible_host', 'equalto', item.key) | map(attribute='key') | first})
+      }}
+  loop: "{{ process_status_dict['running_processes'] | dict2items }}"
+  vars:
+    ip_to_hostname: {}
+
+- name: Debug IP hostname mapping
+  debug:
+    msg: "{{ ip_to_hostname }}"
+
+- name: Check if processes are running and validate output files
+  shell: |
+    #!/bin/bash
+    declare -A process_outputs
+    {% for process, expected_output in item.value.items() %}
+    process_outputs["{{ process | quote }}"]="{{ expected_output | quote }}"
+    {% endfor %}
+
+    for process in "${!process_outputs[@]}"; do
+      if pgrep -f "$process" > /dev/null; then
+        file_path="/tmp/${process// /_}"
+        if [ -f "$file_path" ]; then
+          actual_output=$(cat "$file_path" | tr -d '[:space:]' | tr -d "'")
+          expected_output=$(echo "${process_outputs[$process]}" | tr -d '[:space:]' | tr -d "'")
+          if echo "$actual_output" | grep -q "$expected_output"; then
+            echo "Process $process is running - Expected Output: ${process_outputs[$process]}"
+          else
+            echo "Process $process is running, but file content does not match expected output"
+            echo "Expected: ${process_outputs[$process]}"
+            echo "Found: $actual_output"
+            exit 1
+          fi
+        else
+          echo "Process $process is running, but the file $file_path does not exist"
+          exit 1
+        fi
+      else
+        echo "Process $process is not running - Expected Output: ${process_outputs[$process]}"
+        exit 1
+      fi
+    done
+    echo "All processes are running, log files contains declared expected output"
+  args:
+    executable: /bin/bash
+  delegate_to: "{{ ip_to_hostname[item.key] }}"
+  loop: "{{ process_status_dict['running_processes'] | dict2items }}"
+  register: process_check_results
+  ignore_errors: false
+
+
+- debug:
+    msg: "{{ item.stdout_lines }}"
+  loop: "{{ process_check_results.results }}"
+  loop_control:
+    label: 'process_check_results'

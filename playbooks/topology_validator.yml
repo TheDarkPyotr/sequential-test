@@ -1,10 +1,6 @@
 ---
 - name: 1. Topology Validator Phase
   hosts: localhost
-  vars:
-    testbed_repo: "https://github.com/TheDarkPyotr/sequential-test"
-    testbed_repo_branch: "main"
-
   gather_facts: false
 
   tasks:
@@ -45,7 +41,7 @@
         msg: "{{ files.files | map(attribute='path') | list }}"
 
     - name: Execute validator script for {{ topologies_folder }}
-      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/topologies/"
+      command: python3 "{{ temp_repo_dir.path }}"/utils/topology_validator/validator.py "{{ temp_repo_dir.path }}/{{ topologies_folder }}/"
       register: validation_result
 
     - name: Check topology validity script execution
@@ -68,5 +64,4 @@
         data:
           topologies_folder: "{{ topologies_folder }}"
           topology_validity: "{{ TOPOLOGY_VALIDITY | bool}}"
-          oak_repo_commit: "{{ commit }}"
           testbed_tmp_path: "{{ temp_repo_dir.path }}"

@@ -89,5 +89,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# python3 /utils/mdnc_deploy/combination.py /home/luca/Desktop/TUM/connected-mobility/taskforce/sequential-test/topologies/2d2c.json  "['cmvm22', 'localhost']"  "['cmvm22', 'localhost']"
