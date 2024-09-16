@@ -128,7 +128,7 @@
 
       rescue:
         # Ensure consistent cleanup in case of failure
-        - name: ⚠️ Fallback to failure cleanup job for failure scenario ⚠️
+        - name: 🔴 ⚠️ 🔴 Fallback to failure cleanup job for failure scenario 🔴 ⚠️ 🔴
           awx.awx.job_launch:
             job_template: "{{ job_mapping['failure_cleanup'] }}"
             extra_vars:
@@ -145,4 +145,4 @@
 
         - name: Report failure to dispatch jobs
           fail:
-            msg: "Failed to dispatch jobs"
+            msg: "Failed to dispatch jobs: check the dispatch section for detailed error message"

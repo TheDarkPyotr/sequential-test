@@ -24,7 +24,7 @@ jobs:
         working-directory: ./actions/awx-deploy
 
       - name: Trigger Testbed Oneshot Execution
-        uses: ./actions/awx-deploy
+        uses: ./.github/actions/awx-deploy
         with:
           AWX_URL: ${{ secrets.TOWER_HOST }}
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
