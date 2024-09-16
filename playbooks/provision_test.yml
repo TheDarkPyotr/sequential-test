@@ -8,10 +8,6 @@
         echo $OAK_STATUS
       register: oak_status
 
-    - name: OAK_STATUS value for each inventory host
-      debug:
-        msg: "{{ oak_status }}"
-
     - name: Set host availability if not busy
       set_fact:
         host_available: "{{ oak_status.stdout != 'busy' }}"
