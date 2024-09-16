@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./actions/awx-deploy
+        working-directory: ./.github/actions/awx-deploy
 
       - name: Trigger Testbed Oneshot Execution
         uses: ./.github/actions/awx-deploy
