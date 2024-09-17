@@ -21,3 +21,23 @@ jobs:
         run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.triggering_actor.name }} "
       - name: Wait 5 seconds
         run: sleep 5
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./.github/actions/awx-deploy
+
+      - name: Trigger Testbed Oneshot Execution
+        uses: ./.github/actions/awx-deploy
+        with:
+          AWX_URL: ${{ secrets.TOWER_HOST }}
+          AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
+          AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          PR_USER: ${{ github.event.workflow_run.repository.owner.login }}
+          PR_COMMIT: ${{ github.event.workflow_run.head_sha }}
