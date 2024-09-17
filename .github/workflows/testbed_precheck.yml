@@ -15,3 +15,5 @@ jobs:
         - uses: int128/wait-for-workflows-action@v1.15.0
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
+            filter-workflow-events: workflow_run
+    

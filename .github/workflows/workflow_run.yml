@@ -18,4 +18,6 @@ jobs:
       - name: Print event  commit
         run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
       - name: Print triggering_actor
-        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.triggering_actor }} "
+        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.triggering_actor.name }} "
+      - name: Wait 5 seconds
+        run: sleep 5
