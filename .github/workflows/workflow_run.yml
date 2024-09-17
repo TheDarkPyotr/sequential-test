@@ -1,0 +1,21 @@
+name: Triggered Workflow Run
+on:
+  workflow_run:
+    workflows: ["Preliminary Checks"]
+    types:
+      - requested
+
+jobs:
+  run_on_workflow_a_success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run on workflow A success
+        run: echo "Workflow A completes successfully"
+      - name: Print event branch
+        run: echo "Workflow A run ID ${{ github.event.workflow_run.head_branch }} "
+      - name: Print event sha
+        run: echo "Workflow A run commit ${{ github.event.workflow_run.head_sha }} "
+      - name: Print event  commit
+        run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
+      - name: Print triggering_actor
+        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.triggering_actor }} "
