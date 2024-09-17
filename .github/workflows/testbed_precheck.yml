@@ -16,4 +16,7 @@ jobs:
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             filter-workflow-events: workflow_run
+            filter-workflow-names: |
+                trigger_testbed
+            period-seconds: 60
     

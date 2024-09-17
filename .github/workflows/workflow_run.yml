@@ -1,4 +1,4 @@
-name: Triggered Workflow Run
+name: trigger_testbed
 on:
   workflow_run:
     workflows: ["Preliminary Checks"]
@@ -6,7 +6,7 @@ on:
       - requested
 
 jobs:
-  run_on_workflow_a_success:
+  trigger_testbed:
     runs-on: ubuntu-latest
     steps:
       - name: Run on workflow A success
@@ -18,7 +18,7 @@ jobs:
       - name: Print event  commit
         run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
       - name: Print triggering_actor
-        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.triggering_actor.name }} "
+        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.head_repository.owner.login }} "
       - name: Wait 5 seconds
         run: sleep 5
       - name: Checkout
@@ -39,5 +39,5 @@ jobs:
           AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
           AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          PR_USER: ${{ github.event.workflow_run.repository.owner.login }}
+          PR_USER: ${{ github.event.workflow_run.head_repository.owner.login }}
           PR_COMMIT: ${{ github.event.workflow_run.head_sha }}
