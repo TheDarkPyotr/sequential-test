@@ -1,0 +1,20 @@
+name: Preliminary Checks
+
+on:
+    pull_request_review:
+      types: [submitted]
+
+jobs:
+  check:
+    name: Testbed Oneshot Execution
+    if: ${{ github.event.review.state == 'approved' }}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - uses: int128/wait-for-workflows-action@v1.15.0
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            period-seconds: 60
+            sha: ${{ github.event.pull_request.head.sha }}
+            filter-workflow-events: ""
