@@ -19,8 +19,12 @@ jobs:
         run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
       - name: Print triggering_actor
         run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.actor.login }} "
-      - name: Wait 5 seconds
-        run: sleep 5
+      - name: Print event name
+        run: echo "Workflow A run event ${{ github.event.workflow_run.event }} "
+      - name: Print event id
+        run: echo "Workflow A name ${{ github.event.workflow_run.name }} "
+      - name: Wait 120 seconds
+        run: sleep 120
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Node.js
