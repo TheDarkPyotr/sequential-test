@@ -17,4 +17,4 @@ jobs:
             token: ${{ secrets.GITHUB_TOKEN }}
             period-seconds: 60
             sha: ${{ github.event.pull_request.head.sha }}
-            filter-workflow-events: ""
+            filter-workflow-events: "pull_request_review"
