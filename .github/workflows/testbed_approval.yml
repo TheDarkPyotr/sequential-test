@@ -1,4 +1,4 @@
-name: Preliminary Checks
+name: Testbed Oneshot - Intermediate Approval Check
 
 on:
     pull_request_review:
@@ -6,15 +6,11 @@ on:
 
 jobs:
   check:
-    name: Testbed Oneshot Execution
+    name: Waiting Termination of Testbed Oneshot Execution Workflow
     if: ${{ github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
     steps:
-        - name: Print github ref
-          run: echo "Github ref ${{ github.ref }}"
-        - name: Print github sha
-          run: echo "Github sha ${{ github.sha }}"
-        - name: Wait for tests to succeed
+        - name: Testbed Oneshot Execution - Waiting cycle
           uses: lewagon/wait-on-check-action@v1.3.4
           with:
               ref: main

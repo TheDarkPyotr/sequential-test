@@ -32,7 +32,7 @@ async function triggerAWX() {
     // Print the URL, template ID, branch, and commit
     console.log(`🌱 Branch: ${pullRequestBranch}`);
     console.log(`#️⃣ Commit: ${pullRequestCommit}`);
-    console.log(`👷 Approved by: ${pullRequestUser}`);
+    console.log(`👷 PR Commit Author: ${pullRequestUser}`);
 
     // Step 1: Trigger the workflow job template
     const jobLaunchUrl = `https://${awxUrl}/api/v2/workflow_job_templates/${workflowTemplateId}/launch/`;

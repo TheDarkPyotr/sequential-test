@@ -1,0 +1,32 @@
+name: Testbed Oneshot - Multiple Scenarios Test Deployment
+on:
+  workflow_run:
+    workflows: ["Testbed Oneshot - Intermediate Approval Check"]
+    types:
+      - requested
+
+jobs:
+  trigger-awx-job:
+    name: Trigger Testbed Oneshot Execution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./.github/actions/awx-deploy
+
+      - name: Testbed Oneshot Execution
+        uses: ./.github/actions/awx-deploy
+        with:
+          AWX_URL: ${{ secrets.TOWER_HOST }}
+          AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
+          AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          PR_USER: ${{ github.event.workflow_run.head_commit.author.name }}
+          PR_COMMIT: ${{ github.event.workflow_run.head_sha }}
