@@ -21,3 +21,4 @@ jobs:
               check-name: 'Trigger Testbed Oneshot Execution'
               repo-token: ${{ secrets.GITHUB_TOKEN }}
               wait-interval: 20
+              allowed-conclusions: success

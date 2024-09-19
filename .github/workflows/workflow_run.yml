@@ -19,7 +19,7 @@ jobs:
       - name: Print event  commit
         run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
       - name: Print triggering_actor
-        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.actor.login }} "
+        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.head_repository.owner.login }} "
       - name: Print event name
         run: echo "Workflow A run event ${{ github.event.workflow_run.event }} "
       - name: Print event id
