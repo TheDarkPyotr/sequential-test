@@ -19,7 +19,7 @@ jobs:
       - name: Print event  commit
         run: echo "Workflow A run branch ${{ github.event.workflow_run.head_commit }} "
       - name: Print triggering_actor
-        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.head_repository.owner.login }} "
+        run: echo "Workflow A run triggering actor ${{ github.event.workflow_run.head_commit.author.name }} "
       - name: Print event name
         run: echo "Workflow A run event ${{ github.event.workflow_run.event }} "
       - name: Print event id
@@ -31,16 +31,16 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./.github/actions/awx-deploy
+      #- name: Install dependencies
+      #  run: npm install
+      #  working-directory: ./.github/actions/awx-deploy
 
-      - name: Testbed Oneshot Execution
-        uses: ./.github/actions/awx-deploy
-        with:
-          AWX_URL: ${{ secrets.TOWER_HOST }}
-          AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
-          AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
-          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          PR_USER: ${{ github.event.workflow_run.actor.login }}
-          PR_COMMIT: ${{ github.event.workflow_run.head_sha }}
+      #- name: Testbed Oneshot Execution
+      #  uses: ./.github/actions/awx-deploy
+      #  with:
+      #    AWX_URL: ${{ secrets.TOWER_HOST }}
+      #    AWX_TOKEN: ${{ secrets.TOWER_TOKEN }}
+      #    AWX_TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+      #    PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      #    PR_USER: ${{ github.event.workflow_run.actor.login }}
+      #    PR_COMMIT: ${{ github.event.workflow_run.head_sha }}
