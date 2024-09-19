@@ -26,7 +26,7 @@ async function triggerAWX() {
     const extraVars = {
       oak_repo_branch: pullRequestBranch,
       oak_repo_commit: pullRequestCommit,
-      username: pullRequestUser
+      pr_fork_user: pullRequestUser
     };
 
     // Print the URL, template ID, branch, and commit
