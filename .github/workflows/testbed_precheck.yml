@@ -10,11 +10,14 @@ jobs:
     if: ${{ github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-        - uses: int128/wait-for-workflows-action@v1.15.0
+        - name: Print github ref
+          run: echo "Github ref ${{ github.ref }}"
+        - name: Print github sha
+          run: echo "Github sha ${{ github.sha }}"
+        - name: Wait for tests to succeed
+          uses: lewagon/wait-on-check-action@v1.3.4
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            period-seconds: 60
-            sha: ${{ github.event.pull_request.head.sha }}
-            filter-workflow-events: ""
+              ref: ${{ github.sha }}
+              check-name: 'Trigger Testbed Oneshot Execution'
+              repo-token: ${{ secrets.GITHUB_TOKEN }}
+              wait-interval: 20
