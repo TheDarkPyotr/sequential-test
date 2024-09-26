@@ -1,0 +1,20 @@
+name: Testbed Oneshot - Intermediate Approval Check
+
+on:
+    pull_request_review:
+      types: [submitted]
+
+jobs:
+  check:
+    name: Waiting Termination of Testbed Oneshot Execution Workflow
+    if: ${{ github.event.review.state == 'approved' }}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Testbed Oneshot Execution - Waiting cycle
+          uses: lewagon/wait-on-check-action@v1.3.4
+          with:
+              ref: main
+              check-name: 'Trigger Testbed Oneshot Execution'
+              repo-token: ${{ secrets.GITHUB_TOKEN }}
+              wait-interval: 20
+              allowed-conclusions: success
